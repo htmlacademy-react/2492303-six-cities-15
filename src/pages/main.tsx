@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TAppProps } from '../App/app';
+import { TAppProps } from '../App/App';
 import { OfferCard } from '../components/offer-card/offer-card';
 
 
