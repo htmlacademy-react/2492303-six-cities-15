@@ -1,6 +1,7 @@
 import {Link} from 'react-router-dom';
 import {Helmet} from 'react-helmet-async';
 import { FC } from 'react';
+import { AppRoute } from '../const';
 
 export const NotFoundScreen: FC = ()=> (
   <section>
@@ -10,7 +11,7 @@ export const NotFoundScreen: FC = ()=> (
 
     <section>
       <h1>404. Page not found</h1>
-      <Link to="/">Вернуться на главную</Link>
+      <Link to={AppRoute.Main}>Вернуться на главную</Link>
     </section>
   </section>
 );
