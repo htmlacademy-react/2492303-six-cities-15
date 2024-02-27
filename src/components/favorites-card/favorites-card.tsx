@@ -1,17 +1,9 @@
 import { FC } from 'react';
+import { TFavoriteData } from '../../const';
 
 export type TOfferCardPageProps = {
-  favoritesData: TFavoritesData;
+  favoritesData: TFavoriteData;
 }
-
-export type TFavoritesData = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
-};
 
 export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => (
   <article className='favorites__card place-card'>

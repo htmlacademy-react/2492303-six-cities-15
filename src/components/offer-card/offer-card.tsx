@@ -1,19 +1,10 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, TOffersData } from '../../const';
 
 export type TOfferCardPageProps = {
   offersData: TOffersData;
   setActiveOfferCardid: (e: number) => void;
-}
-
-export type TOffersData = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
 }
 
 export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCardid}) => {

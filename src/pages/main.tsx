@@ -1,22 +1,14 @@
 import { FC, useState } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
+import { TOffersData } from '../const';
 
 export type TMainPageProps = {
   cardAmount: number;
   offersData: TOffersData[];
 }
 
-export type TOffersData = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
-}
-
 export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
-  const[, setActiveOfferCardid] = useState(0);
+  const[, setActiveOfferCardid] = useState(-1);
 
   return (
     <div className="page page--gray page--main">
