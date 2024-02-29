@@ -14,7 +14,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCa
   return(
     <article className="cities__card place-card">
       <div className="cities__image-wrapper place-card__image-wrapper" onMouseOver={handleMouseOver}>
-        <Link to= {AppRoute.Offer}>
+        <Link to= {AppRoute.Offer + offersData.id}>
           <img
             className="place-card__image"
             src="img/room.jpg"

@@ -1,14 +1,29 @@
 import { FC, useState } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
-import { TOffersData } from '../const';
+import { City, Point, Points, TOffersData } from '../const';
+import List from '../components/list/list';
+import Map from '../components/map/map.tsx';
 
 export type TMainPageProps = {
   cardAmount: number;
   offersData: TOffersData[];
+  city: City;
+  points: Points;
 }
 
-export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
+export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
   const[, setActiveOfferCardid] = useState(-1);
+  const {city, points} = props;
+
+  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
+    undefined
+  );
+
+  const handleListItemHover = (listItemName: string) => {
+    const currentPoint = points.find((point) => point.title === listItemName);
+
+    setSelectedPoint(currentPoint);
+  };
 
   return (
     <div className="page page--gray page--main">
@@ -92,7 +107,7 @@ export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{cardAmount} places to stay in Amsterdam</b>
+              <b className="places__found">{props.cardAmount} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -119,10 +134,13 @@ export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
                   </li>
                 </ul>
               </form>
-              <OfferList offersData={offersData} cardAmount={cardAmount} setActiveOfferCardid={setActiveOfferCardid}/>
+              <OfferList offersData={props.offersData} cardAmount={props.cardAmount} setActiveOfferCardid={setActiveOfferCardid}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map" />
+              <section className="cities__map map">
+                <List points={points} onListItemHover={handleListItemHover} />
+                <Map city={city} points={points} selectedPoint={selectedPoint} />
+              </section>
             </div>
           </div>
         </div>
