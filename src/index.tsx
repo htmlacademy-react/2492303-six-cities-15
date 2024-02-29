@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import OffersData from './mocks/offers';
 import FavoriteData from './mocks/favorites';
-import App from './App/app';
+import App from './App/App';
 import { POINTS } from './mocks/points';
 import { CITY } from './mocks/city';
 
