@@ -1,7 +1,6 @@
 import { FC, useState } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
 import { City, Point, Points, TOffersData } from '../const';
-import List from '../components/list/list';
 import Map from '../components/map/map.tsx';
 
 export type TMainPageProps = {

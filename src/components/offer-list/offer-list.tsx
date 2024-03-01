@@ -14,8 +14,7 @@ export const OfferList: FC<TOfferListPageProps> = ({ cardAmount, offersData, set
   <div className='cities__places-list places__list tabs__content'>
     {
     // eslint-disable-next-line react/no-array-index-key
-      (cardAmount > 0) && Array.from(new Array(cardAmount), (_, index) => 
-      <OfferCard offersData={offersData[index]} key={index} setActiveOfferCardid={setActiveOfferCardid} setSelectedPoint={setSelectedPoint} points={POINTS}/>)
+      (cardAmount > 0) && Array.from(new Array(cardAmount), (_, index) => <OfferCard offersData={offersData[index]} key={index} setActiveOfferCardid={setActiveOfferCardid} setSelectedPoint={setSelectedPoint} points={POINTS}/>)
     }
     {
       (cardAmount === 0) && 'there is no card'

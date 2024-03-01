@@ -12,7 +12,7 @@ export type TOfferCardPageProps = {
 export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCardid, setSelectedPoint, points}) => {
   const handleMouseOver = () => {
     setActiveOfferCardid(offersData.id);
-    const currentPoint = points.find((point) => point.title === offersData.name );
+    const currentPoint = points.find((point) => point.title === offersData.name);
     setSelectedPoint(currentPoint);
   };
   return(
