@@ -1,15 +1,19 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute, TOffersData } from '../../const';
+import { AppRoute, Point, Points, TOffersData } from '../../const';
 
 export type TOfferCardPageProps = {
   offersData: TOffersData;
   setActiveOfferCardid: (e: number) => void;
+  setSelectedPoint: (e: Point | undefined) => void;
+  points: Points;
 }
 
-export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCardid}) => {
+export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCardid, setSelectedPoint, points}) => {
   const handleMouseOver = () => {
     setActiveOfferCardid(offersData.id);
+    const currentPoint = points.find((point) => point.title === offersData.name );
+    setSelectedPoint(currentPoint);
   };
   return(
     <article className="cities__card place-card">
