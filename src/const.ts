@@ -14,6 +14,7 @@ export type TOffersData = {
   price: number;
   period: string;
   rating: string;
+  location: Point;
 }
 
 export type TFavoriteData = {

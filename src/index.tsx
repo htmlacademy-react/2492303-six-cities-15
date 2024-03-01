@@ -12,6 +12,6 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App favoriteData={FavoriteData} mainPageProps={{ offersData: OffersData, cardAmount: 3, city: CITY, points: POINTS}}/>
+    <App favoriteData={FavoriteData} mainPageProps={{ offersData: OffersData, cardAmount: 4, city: CITY, points: POINTS}}/>
   </React.StrictMode>
 );

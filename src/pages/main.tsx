@@ -10,12 +10,22 @@ export type TMainPageProps = {
   points: Points;
 }
 
+export type TOffer = {
+  id: number;
+  name: string;
+  type: string;
+  price: number;
+  period: string;
+  rating: string;
+  location: Point;
+}
+
 export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
-  const[, setActiveOfferCardid] = useState(-1);
   const {city, points} = props;
-  const [selectedPoint, setSelectedPoint] = useState<Point | undefined>(
-    undefined
-  );
+  const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
+  const handlerHover = (offer?: TOffer) => {
+    setSelectedPoint(offer ? offer.location : null);
+  };
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -125,11 +135,10 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
                   </li>
                 </ul>
               </form>
-              <OfferList offersData={props.offersData} cardAmount={props.cardAmount} setActiveOfferCardid={setActiveOfferCardid} setSelectedPoint={setSelectedPoint}/>
+              <OfferList offersData={props.offersData} cardAmount={props.cardAmount} handlerHover={handlerHover}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                {/*<List points={points} onListItemHover={handleListItemHover} />*/}
                 <Map city={city} points={points} selectedPoint={selectedPoint} />
               </section>
             </div>
