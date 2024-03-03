@@ -1,18 +1,10 @@
 import { FC } from 'react';
 import { FavoritesCard } from '../favorites-card/favorites-card';
+import { TFavoriteData } from '../../const';
 
 export type TFavoriteListPageProps = {
   cardAmount: number;
   favoriteData: TFavoriteData[];
-};
-
-export type TFavoriteData = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
 };
 
 export const FavoriteList: FC<TFavoriteListPageProps> = ({ cardAmount, favoriteData}) => (

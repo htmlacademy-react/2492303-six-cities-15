@@ -1,15 +1,31 @@
 import { FC, useState } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
-import { TOffersData } from '../const';
+import { City, Point, Points, TOffersData } from '../const';
+import Map from '../components/map/map.tsx';
 
 export type TMainPageProps = {
   cardAmount: number;
   offersData: TOffersData[];
+  city: City;
+  points: Points;
 }
 
-export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
-  const[, setActiveOfferCardid] = useState(-1);
+export type TOffer = {
+  id: number;
+  name: string;
+  type: string;
+  price: number;
+  period: string;
+  rating: string;
+  location: Point;
+}
 
+export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
+  const {city, points} = props;
+  const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
+  const handlerHover = (offer?: TOffer) => {
+    setSelectedPoint(offer ? offer.location : null);
+  };
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -92,7 +108,7 @@ export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{cardAmount} places to stay in Amsterdam</b>
+              <b className="places__found">{props.cardAmount} places to stay in Amsterdam</b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
                 <span className="places__sorting-type" tabIndex={0}>
@@ -119,10 +135,12 @@ export const MainPage: FC<TMainPageProps> = ({ cardAmount, offersData }) => {
                   </li>
                 </ul>
               </form>
-              <OfferList offersData={offersData} cardAmount={cardAmount} setActiveOfferCardid={setActiveOfferCardid}/>
+              <OfferList offersData={props.offersData} cardAmount={props.cardAmount} handlerHover={handlerHover}/>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map" />
+              <section className="cities__map map">
+                <Map city={city} points={points} selectedPoint={selectedPoint} />
+              </section>
             </div>
           </div>
         </div>
