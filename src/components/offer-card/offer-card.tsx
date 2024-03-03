@@ -16,9 +16,16 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, po
       handlerHover(offersData);
     }
   };
+  const handleMouseOut = () => {
+    handlerHover();
+  };
   return(
     <article className="cities__card place-card">
-      <div className="cities__image-wrapper place-card__image-wrapper" onMouseOver={handleMouseOver}>
+      <div
+        className="cities__image-wrapper place-card__image-wrapper"
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseOut}
+      >
         <Link to= {AppRoute.Offer + offersData.id}>
           <img
             className="place-card__image"
