@@ -25,14 +25,14 @@ export const FormReview: FC = () => {
       </label>
       <div className='reviews__rating-form form__rating'>
         {raitings.map(({ value, label }) => (
-          <>
+          <div key = {value}>
             <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio" value={value} onChange={handleFieldChange}/>
             <label className="reviews__rating-label form__rating-label" htmlFor={`${value}-stars`} title={label}>
               <svg className ="form__star-image" width="37" height="33">
                 <use xlinkHref="#icon-star"></use>
               </svg>
             </label>
-          </>
+          </div>
         ))}
       </div>
       <textarea
