@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
-import { City, Point, Points, TOffersData } from '../const';
+import { City, Point, Points, TOffer, TOffersData } from '../const';
 import Map from '../components/map/map.tsx';
 
 export type TMainPageProps = {
@@ -8,16 +8,6 @@ export type TMainPageProps = {
   offersData: TOffersData[];
   city: City;
   points: Points;
-}
-
-export type TOffer = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
-  location: Point;
 }
 
 export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {

@@ -39,6 +39,17 @@ export type Point = {
   lng: number;
 };
 
+export type TReviewData = {
+  id: number;
+  name: string;
+  note: string;
+  rating: number;
+  time: string;
+  month: string;
+  userName: string;
+  img: string;
+};
+
 export type Points = Point[];
 
 export const URL_MARKER_DEFAULT =
@@ -54,3 +65,13 @@ export const layer = new TileLayer(
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
   }
 );
+
+export type TOffer = {
+  id: number;
+  name: string;
+  type: string;
+  price: number;
+  period: string;
+  rating: string;
+  location: Point;
+}
