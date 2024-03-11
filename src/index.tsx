@@ -5,7 +5,7 @@ import FavoriteData from './mocks/favorites';
 import { POINTS } from './mocks/points';
 import { Provider } from 'react-redux';
 import {store} from './store';
-import App from './app1/app';
+import App from './app/app';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
