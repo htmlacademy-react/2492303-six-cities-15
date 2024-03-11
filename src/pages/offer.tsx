@@ -4,7 +4,6 @@ import { FormReview } from '../components/form-review/form-review';
 import { Reviews } from '../components/reviews/reviews';
 import ReviewsData from '../mocks/reviews';
 import Map from '../components/map/map';
-import { CITY } from '../mocks/city';
 import { NPOINTS } from '../mocks/npoints';
 import { OfferList } from '../components/offer-list/offer-list';
 import OffersData from '../mocks/offers';
@@ -12,7 +11,7 @@ import { useState } from 'react';
 
 function Offer(): JSX.Element {
   const params = useParams();
-  if (params.year) {
+  if (params.id) {
     // eslint-disable-next-line no-console
     console.log(params);
   }
@@ -196,7 +195,7 @@ function Offer(): JSX.Element {
             </div>
           </div>
           <section className='offer__map map'>
-            <Map city={CITY} points={NPOINTS} selectedPoint={selectedPoint} />
+            <Map activeCity={OffersData[Number(params.id) ?? 0].city} points={NPOINTS} selectedPoint={selectedPoint} />
           </section>
         </section>
         <div className='container'>
@@ -205,7 +204,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offersData={OffersData} cardAmount={3} handlerHover={handlerHover}/>
+              <OfferList offersData={OffersData} cardAmount={3} handlerHover={handlerHover} city={OffersData[Number(params.id) ?? 0].city}/>
             </div>
           </section>
         </div>
