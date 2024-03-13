@@ -1,4 +1,6 @@
-const OffersData = [
+import { TFavoriteData } from '../const';
+
+const OffersData: TFavoriteData[] = [
   {
     'id': 1,
     'name': 'Best room',

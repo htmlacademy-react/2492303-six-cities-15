@@ -1,29 +1,31 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, Points, TOffer, TOffersData } from '../../const';
 
 export type TOfferCardPageProps = {
   offersData: TOffersData;
-  setActiveOfferCardid: (e: number) => void;
+  handlerHover: (offer?: TOffer) => void;
+  points: Points;
 }
 
-export type TOffersData = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: string;
-}
-
-export const OfferCard: FC<TOfferCardPageProps> = ({offersData, setActiveOfferCardid}) => {
+export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, points}) => {
   const handleMouseOver = () => {
-    setActiveOfferCardid(offersData.id);
+    const currentPoint = points.find((point) => point.title === offersData.name);
+    if (currentPoint){
+      handlerHover(offersData);
+    }
+  };
+  const handleMouseOut = () => {
+    handlerHover();
   };
   return(
     <article className="cities__card place-card">
-      <div className="cities__image-wrapper place-card__image-wrapper" onMouseOver={handleMouseOver}>
-        <Link to= {AppRoute.Offer}>
+      <div
+        className="cities__image-wrapper place-card__image-wrapper"
+        onMouseOver={handleMouseOver}
+        onMouseLeave={handleMouseOut}
+      >
+        <Link to= {AppRoute.Offer + offersData.id}>
           <img
             className="place-card__image"
             src="img/room.jpg"
