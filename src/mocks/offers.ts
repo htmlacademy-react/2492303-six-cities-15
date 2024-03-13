@@ -8,13 +8,14 @@ const OffersData: TOffersData[] = [
     type: 'Room',
     price: 20,
     period: 'day',
-    rating: '100%',
+    rating: 100,
+    popular: 3,
     location: {
       title: 'Best room',
       lat: 52.3909553943508,
       lng: 4.85309666406198,
     },
-    city: City[1]
+    city: City[3]
   },
   {
     id: 2,
@@ -22,7 +23,8 @@ const OffersData: TOffersData[] = [
     type: 'Bed',
     price: 10,
     period: 'hour',
-    rating: '80%',
+    rating: 80,
+    popular: 5,
     location : {
       title: 'U Vartana',
       lat: 52.3609553943508,
@@ -36,7 +38,8 @@ const OffersData: TOffersData[] = [
     type: 'Room',
     price: 3,
     period: 'day',
-    rating: '10%',
+    rating: 10,
+    popular: 6,
     location: {
       title: 'Hostel',
       lat: 52.3909553943508,
@@ -50,7 +53,8 @@ const OffersData: TOffersData[] = [
     type: 'Room',
     price: 100,
     period: 'day',
-    rating: '50%',
+    rating: 50,
+    popular: 6,
     location: {
       title: 'Sky',
       lat: 52.3809553943508,
