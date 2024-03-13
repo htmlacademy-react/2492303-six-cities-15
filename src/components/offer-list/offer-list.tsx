@@ -1,19 +1,21 @@
 import { FC } from 'react';
 import { OfferCard } from '../offer-card/offer-card';
-import { TOffer, TOffersData } from '../../const';
+import { TCity, TOffer, TOffersData } from '../../const';
 import { POINTS } from '../../mocks/points';
 
 export type TOfferListPageProps = {
   cardAmount: number;
   offersData: TOffersData[];
   handlerHover: (offer?: TOffer) => void;
+  city: TCity;
 };
 
-export const OfferList: FC<TOfferListPageProps> = ({ cardAmount, offersData, handlerHover}) => (
+export const OfferList: FC<TOfferListPageProps> = ({ cardAmount, offersData, handlerHover, city}) => (
   <div className='cities__places-list places__list tabs__content'>
     {
-    // eslint-disable-next-line react/no-array-index-key
-      (cardAmount > 0) && Array.from(new Array(cardAmount), (_, index) => <OfferCard offersData={offersData[index]} key={index} handlerHover={handlerHover} points={POINTS}/>)
+      (cardAmount > 0) && offersData.filter((item) => item.city.id === city.id).map((item) => (
+        <OfferCard key={item.id} offersData={item} handlerHover={handlerHover} points={POINTS}/>
+      ))
     }
     {
       (cardAmount === 0) && 'there is no card'

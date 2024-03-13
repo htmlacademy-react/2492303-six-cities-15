@@ -15,6 +15,7 @@ export type TOffersData = {
   period: string;
   rating: string;
   location: Point;
+  city: TCity;
 }
 
 export type TFavoriteData = {
@@ -26,7 +27,8 @@ export type TFavoriteData = {
   rating: string;
 }
 
-export type City = {
+export type TCity = {
+  id: number;
   title: string;
   lat: number;
   lng: number;
@@ -74,4 +76,8 @@ export type TOffer = {
   period: string;
   rating: string;
   location: Point;
+  city: TCity;
 }
+
+export const FIRST_GAME_STEP = 0;
+export const MAX_MISTAKE_COUNT = 3;

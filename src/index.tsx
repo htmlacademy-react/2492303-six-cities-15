@@ -3,8 +3,9 @@ import ReactDOM from 'react-dom/client';
 import OffersData from './mocks/offers';
 import FavoriteData from './mocks/favorites';
 import { POINTS } from './mocks/points';
-import { CITY } from './mocks/city';
-import App from './App/App';
+import { Provider } from 'react-redux';
+import {store} from './store';
+import App from './app/app';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -12,6 +13,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <React.StrictMode>
-    <App favoriteData={FavoriteData} mainPageProps={{ offersData: OffersData, cardAmount: 4, city: CITY, points: POINTS}}/>
+    <Provider store = {store}>
+      <App favoriteData={FavoriteData} mainPageProps={{ offersData: OffersData, cardAmount: 4, points: POINTS}}/>
+    </Provider>
   </React.StrictMode>
 );

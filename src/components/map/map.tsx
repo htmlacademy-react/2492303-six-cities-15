@@ -1,13 +1,13 @@
 import {useRef, useEffect} from 'react';
 import {Icon, Marker, layerGroup} from 'leaflet';
 
-import {City, Points, Point} from '../../const';
+import {TCity, Points, Point} from '../../const';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../const';
 import 'leaflet/dist/leaflet.css';
 import useMap from '../hooks/useMap';
 
 type MapProps = {
-  city: City;
+  activeCity: TCity;
   points: Points;
   selectedPoint: Point | null;
 };
@@ -25,9 +25,9 @@ const currentCustomIcon = new Icon({
 });
 
 function Map(props: MapProps): JSX.Element {
-  const {city, points, selectedPoint} = props;
+  const {activeCity, points, selectedPoint} = props;
   const mapRef = useRef(null);
-  const map = useMap(mapRef, city);
+  const map = useMap(mapRef, activeCity);
 
   useEffect(() => {
     if (map) {
