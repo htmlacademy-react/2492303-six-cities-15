@@ -195,7 +195,7 @@ function Offer(): JSX.Element {
             </div>
           </div>
           <section className='offer__map map'>
-            <Map activeCity={OffersData[Number(params.id) ?? 0].city} points={NPOINTS} selectedPoint={selectedPoint} />
+            <Map activeCity={OffersData[Number(params.id) - 1 ?? 1].city} points={NPOINTS} selectedPoint={selectedPoint} />
           </section>
         </section>
         <div className='container'>
@@ -204,7 +204,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offersData={OffersData} cardAmount={3} handlerHover={handlerHover} city={OffersData[Number(params.id) ?? 0].city}/>
+              <OfferList offersData={OffersData} cardAmount={3} handlerHover={handlerHover} city={OffersData[Number(params.id) - 1 ?? 0].city}/>
             </div>
           </section>
         </div>

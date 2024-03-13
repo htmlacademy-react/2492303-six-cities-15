@@ -13,7 +13,8 @@ export type TOffersData = {
   type: string;
   price: number;
   period: string;
-  rating: string;
+  rating: number;
+  popular: number;
   location: Point;
   city: TCity;
 }
@@ -58,7 +59,8 @@ export const URL_MARKER_DEFAULT =
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
 
 export const URL_MARKER_CURRENT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
+  'img/pin-active.svg';
+  //'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
 
 export const layer = new TileLayer(
   'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
@@ -74,7 +76,8 @@ export type TOffer = {
   type: string;
   price: number;
   period: string;
-  rating: string;
+  rating: number;
+  popular: number;
   location: Point;
   city: TCity;
 }
