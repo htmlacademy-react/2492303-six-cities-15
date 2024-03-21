@@ -1,24 +1,39 @@
 import {Link, useParams} from 'react-router-dom';
-import { AppRoute, Point, TOffer } from '../const';
+import { AppRoute, AuthorizationStatus, Point, TOffer } from '../const';
 import { FormReview } from '../components/form-review/form-review';
 import { Reviews } from '../components/reviews/reviews';
-import ReviewsData from '../mocks/reviews';
 import Map from '../components/map/map';
-import { NPOINTS } from '../mocks/npoints';
 import { OfferList } from '../components/offer-list/offer-list';
-import OffersData from '../mocks/offers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useAppDispatch, useAppSelector } from '../components/hooks';
+import { fetchOfferAction, fetchOfferNearAction } from '../store/api-actions';
+import { NotFoundScreen } from './not-found-screen';
 
 function Offer(): JSX.Element {
   const params = useParams();
-  if (params.id) {
-    // eslint-disable-next-line no-console
-    console.log(params);
-  }
+  const dispatch = useAppDispatch();
+
+  useEffect (() => {
+    if (params.id) {
+      dispatch(fetchOfferAction(params.id));
+      dispatch(fetchOfferNearAction(params.id));
+    }
+  }, [params]);
+  const activeCity = useAppSelector((state) => state.city);
+  const offersNear = useAppSelector((state) => state.offersNear);
+  const offers = useAppSelector((state) => state.offers);
+  const offer = useAppSelector((state) => state.offer);
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
-  const handlerHover = (offer?: TOffer) => {
-    setSelectedPoint(offer ? offer.location : null);
+  const handlerHover = (offerS?: TOffer) => {
+    setSelectedPoint(offerS ? offerS.location : null);
   };
+  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const hasError = useAppSelector(((state) => state.hasError));
+  if (hasError) {
+    return (
+      <NotFoundScreen />
+    );
+  }
   return (
     <div className='page'>
       <header className='header'>
@@ -63,58 +78,25 @@ function Offer(): JSX.Element {
         <section className='offer'>
           <div className='offer__gallery-container container'>
             <div className='offer__gallery'>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/room.jpg'
-                  alt='Photo studio'
-                />
-              </div>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/apartment-01.jpg'
-                  alt='Photo studio'
-                />
-              </div>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/apartment-02.jpg'
-                  alt='Photo studio'
-                />
-              </div>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/apartment-03.jpg'
-                  alt='Photo studio'
-                />
-              </div>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/studio-01.jpg'
-                  alt='Photo studio'
-                />
-              </div>
-              <div className='offer__image-wrapper'>
-                <img
-                  className='offer__image'
-                  src='img/apartment-01.jpg'
-                  alt='Photo studio'
-                />
-              </div>
+              {offer?.images?.map((item) => (
+                <div key = {item} className='offer__image-wrapper'>
+                  <img
+                    className='offer__image'
+                    src= {item}
+                    alt='Photo studio'
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className='offer__container container'>
             <div className='offer__wrapper'>
               <div className='offer__mark'>
-                <span>Premium</span>
+                <span>{offer?.isPremium ? 'Premium' : 'Single'}</span>
               </div>
               <div className='offer__name-wrapper'>
                 <h1 className='offer__name'>
-                  Beautiful &amp; luxurious studio at great location
+                  {offer?.title}
                 </h1>
                 <button className='offer__bookmark-button button' type='button'>
                   <svg className='offer__bookmark-icon' width={31} height={33}>
@@ -126,38 +108,31 @@ function Offer(): JSX.Element {
               <div className='offer__rating rating'>
                 <div className='offer__stars rating__stars'>
                   <span style={{ width: '80%' }} />
-                  <span className='visually-hidden'>Rating</span>
+                  <span className='visually-hidden'>Rating </span>
                 </div>
-                <span className='offer__rating-value rating__value'>4.8</span>
+                <span className='offer__rating-value rating__value'>{offer?.rating}</span>
               </div>
               <ul className='offer__features'>
                 <li className='offer__feature offer__feature--entire'>
-                  Apartment
+                  {offer?.type}
                 </li>
                 <li className='offer__feature offer__feature--bedrooms'>
-                  3 Bedrooms
+                  {offer?.bedrooms} Bedrooms
                 </li>
                 <li className='offer__feature offer__feature--adults'>
-                  Max 4 adults
+                  Max {offer?.maxAdults} adults
                 </li>
               </ul>
               <div className='offer__price'>
-                <b className='offer__price-value'>€120</b>
+                <b className='offer__price-value'>€{offer?.price}</b>
                 <span className='offer__price-text'>&nbsp;night</span>
               </div>
               <div className='offer__inside'>
                 <h2 className='offer__inside-title'>Whats inside</h2>
                 <ul className='offer__inside-list'>
-                  <li className='offer__inside-item'>Wi-Fi</li>
-                  <li className='offer__inside-item'>Washing machine</li>
-                  <li className='offer__inside-item'>Towels</li>
-                  <li className='offer__inside-item'>Heating</li>
-                  <li className='offer__inside-item'>Coffee machine</li>
-                  <li className='offer__inside-item'>Baby seat</li>
-                  <li className='offer__inside-item'>Kitchen</li>
-                  <li className='offer__inside-item'>Dishwasher</li>
-                  <li className='offer__inside-item'>Cabel TV</li>
-                  <li className='offer__inside-item'>Fridge</li>
+                  {offer?.goods?.map((item) => (
+                    <li key={item} className='offer__inside-item'>{item}</li>
+                  ))}
                 </ul>
               </div>
               <div className='offer__host'>
@@ -166,36 +141,32 @@ function Offer(): JSX.Element {
                   <div className='offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper'>
                     <img
                       className='offer__avatar user__avatar'
-                      src='img/avatar-angelina.jpg'
+                      src= {offer?.host?.avatarUrl}
                       width={74}
                       height={74}
                       alt='Host avatar'
                     />
                   </div>
-                  <span className='offer__user-name'>Angelina</span>
-                  <span className='offer__user-status'>Pro</span>
+                  <span className='offer__user-name'>{offer?.host?.name}</span>
+                  <span className='offer__user-status'>{offer?.host?.isPro ? 'Pro' : ''}</span>
                 </div>
                 <div className='offer__description'>
                   <p className='offer__text'>
-                    A quiet cozy and picturesque that hides behind a a river by
-                    the unique lightness of Amsterdam. The building is green and
-                    from 18th century.
+                    {offer?.description}
                   </p>
                   <p className='offer__text'>
-                    An independent House, strategically located between Rembrand
-                    Square and National Opera, but where the bustle of the city
-                    comes to rest in this alley flowery and colorful.
+                    {offer?.description}
                   </p>
                 </div>
               </div>
               <section className='offer__reviews reviews'>
-                <Reviews cntReviews={ReviewsData.length}/>
-                <FormReview/>
+                <Reviews/>
+                {authorizationStatus === AuthorizationStatus.Auth && <FormReview offerId={offer?.id}/>}
               </section>
             </div>
           </div>
           <section className='offer__map map'>
-            <Map activeCity={OffersData[Number(params.id) - 1 ?? 1].city} points={NPOINTS} selectedPoint={selectedPoint} />
+            <Map activeCity={activeCity} points={offers.map((item)=> item.location)} selectedPoint={selectedPoint} />
           </section>
         </section>
         <div className='container'>
@@ -204,7 +175,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offersData={OffersData} cardAmount={3} handlerHover={handlerHover} city={OffersData[Number(params.id) - 1 ?? 0].city}/>
+              <OfferList offers={offersNear} cardAmount={3} handlerHover={handlerHover} city={activeCity}/>
             </div>
           </section>
         </div>

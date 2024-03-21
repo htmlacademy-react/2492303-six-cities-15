@@ -4,19 +4,20 @@ export enum AppRoute {
   Main = '/',
   Login = '/login',
   Favorites = '/favorites',
-  Offer = '/offer/'
+  Offer = '/offer/:id'
 }
 
-export type TOffersData = {
+export type TOffer = {
   id: number;
-  name: string;
+  title: string;
   type: string;
   price: number;
-  period: string;
-  rating: number;
-  popular: number;
-  location: Point;
+  previewImage:string;
   city: TCity;
+  location: Point;
+  isFavorite: boolean;
+  isPremium: boolean;
+  rating: number;
 }
 
 export type TFavoriteData = {
@@ -30,16 +31,14 @@ export type TFavoriteData = {
 
 export type TCity = {
   id: number;
-  title: string;
-  lat: number;
-  lng: number;
-  zoom: number;
+  name: string;
+  location: Point;
 };
 
 export type Point = {
-  title: string;
-  lat: number;
-  lng: number;
+  latitude: number;
+  longitude: number;
+  zoom: number;
 };
 
 export type TReviewData = {
@@ -70,17 +69,64 @@ export const layer = new TileLayer(
   }
 );
 
-export type TOffer = {
-  id: number;
-  name: string;
-  type: string;
-  price: number;
-  period: string;
-  rating: number;
-  popular: number;
-  location: Point;
-  city: TCity;
-}
-
 export const FIRST_GAME_STEP = 0;
 export const MAX_MISTAKE_COUNT = 3;
+
+export enum APIRoute {
+  Offers = 'offers',
+  Offer = 'offers/',
+  Login = 'login',
+  Logout = 'logout',
+  Comments = 'comments/'
+}
+
+export enum AuthorizationStatus {
+  Auth = 'AUTH',
+  NoAuth = 'NO_AUTH',
+  Unknown = 'UNKNOWN',
+}
+
+export type TOfferId = {
+  id: string;
+  title: string;
+  description: string;
+  type: string;
+  price: number;
+  images: string[];
+  city: TCity;
+  location: Point;
+  goods: string[];
+  host: THost;
+  isPremium: boolean;
+  isFavorite: boolean;
+  rating:	number;
+  bedrooms: number;
+  maxAdults: number;
+};
+
+export type THost = {
+  isPro:	boolean;
+  name:	string;
+  avatarUrl: string;
+};
+
+export type TComments = {
+  id: string;
+  date: Date;
+  user: TUser;
+  comment: string;
+  rating: number;
+};
+
+
+export type TUser = {
+  name: string;
+  avatarUrl: string;
+  isPro: false;
+};
+
+export type TAddComment = {
+  rating?: number;
+  comment?: string;
+  offerId?: string;
+};

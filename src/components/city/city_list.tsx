@@ -1,13 +1,18 @@
 import { FC } from 'react';
+import { useAppSelector } from '../hooks';
+import { Link } from 'react-router-dom';
 
 export type TCityProps = {
-  name: string;
+  title: string;
 }
 
-export const CityList: FC<TCityProps> = ({name}) => (
-  <li className="locations__item">
-    <a className="locations__item-link tabs__item" href="#">
-      <span>{name}</span>
-    </a>
-  </li>
-);
+export const CityList: FC<TCityProps> = ({title}) =>{
+  const activeCity = useAppSelector((state) => state.city);
+  return (
+    <li className="locations__item">
+      <Link to={'#'} className={`locations__item-link ${activeCity.name === title ? 'tabs__item--active' : 'tabs__item'}`}>
+        <span>{title}</span>
+      </Link>
+    </li>
+  );
+};

@@ -9,15 +9,14 @@ function useMap(
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
-
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef.current, {
         center: {
-          lat: 52.3609553943508,
-          lng: 4.85309666406198
+          lat: city.location.latitude,
+          lng: city.location.longitude
         },
-        zoom: 10,
+        zoom: city.location.zoom,
       });
 
       instance.addLayer(layer);

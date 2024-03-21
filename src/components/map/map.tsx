@@ -30,17 +30,28 @@ function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, activeCity);
 
   useEffect(() => {
+    let mounted = true;
+    if (mounted){
+      map?.panTo({lat: activeCity.location.latitude, lng: activeCity.location.longitude});
+      map?.setZoom(activeCity.location.zoom);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [map, activeCity]);
+
+  useEffect(() => {
     if (map) {
       const markerLayer = layerGroup().addTo(map);
       points.forEach((point) => {
         const marker = new Marker({
-          lat: point.lat,
-          lng: point.lng
+          lat: point.latitude,
+          lng: point.longitude
         });
 
         marker
           .setIcon(
-            selectedPoint !== null && point.title === selectedPoint.title
+            selectedPoint !== null && point.latitude === selectedPoint.latitude && point.longitude === selectedPoint.longitude
               ? currentCustomIcon
               : defaultCustomIcon
           )
@@ -51,7 +62,7 @@ function Map(props: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, points, selectedPoint]);
+  }, [map, points, selectedPoint, activeCity]);
 
   return <div style={{height: '100%'}} ref={mapRef}></div>;
 }

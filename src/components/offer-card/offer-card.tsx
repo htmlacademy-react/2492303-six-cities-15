@@ -1,18 +1,17 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { AppRoute, Points, TOffer, TOffersData } from '../../const';
+import { AppRoute, TOffer } from '../../const';
 
 export type TOfferCardPageProps = {
-  offersData: TOffersData;
+  offer: TOffer;
   handlerHover: (offer?: TOffer) => void;
-  points: Points;
 }
 
-export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, points}) => {
+export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
   const handleMouseOver = () => {
-    const currentPoint = points.find((point) => point.title === offersData.name);
+    const currentPoint = offer.city.location;
     if (currentPoint){
-      handlerHover(offersData);
+      handlerHover(offer);
     }
   };
   const handleMouseOut = () => {
@@ -25,7 +24,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, po
         onMouseOver={handleMouseOver}
         onMouseLeave={handleMouseOut}
       >
-        <Link to= {AppRoute.Offer + offersData.id}>
+        <Link to= {AppRoute.Offer.replace(':id', String(offer.id))}>
           <img
             className="place-card__image"
             src="img/room.jpg"
@@ -38,9 +37,9 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, po
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{offersData.price}€</b>
+            <b className="place-card__price-value">{offer.price}€</b>
             <span className="place-card__price-text">
-            /&nbsp;{offersData.period}
+            /&nbsp;{offer.type}
             </span>
           </div>
           <button
@@ -59,14 +58,14 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, po
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: offersData.rating}} />
+            <span style={{ width: offer.rating}} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{offersData.name}</a>
+          <a href="#">{offer.title}</a>
         </h2>
-        <p className="place-card__type">{offersData.type}</p>
+        <p className="place-card__type">{offer.type}</p>
       </div>
     </article>
   );

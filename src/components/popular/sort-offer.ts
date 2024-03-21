@@ -1,6 +1,6 @@
-import { TOffersData } from '../../const';
+import { TOffer } from '../../const';
 
-function SortOffer(offersData: TOffersData[], typeS: string): TOffersData[] {
+function SortOffer(offersData: TOffer[], typeS: string): TOffer[] {
   if (typeS === 'low'){
     return offersData.slice().sort((a, b) => a.price - b.price);
   }
@@ -9,12 +9,12 @@ function SortOffer(offersData: TOffersData[], typeS: string): TOffersData[] {
   }
   if (typeS === 'rated'){
     return offersData.slice().sort((a, b) => b.rating - a.rating);
-  }
-  if (typeS === 'popular'){
-    return offersData.slice().sort((a, b) => a.popular - b.popular);
   } else {
     return offersData;
   }
+  /* if (typeS === 'popular'){
+    return offersData.slice().sort((a, b) => a. - b.isFavorite);
+  }*/
 }
 
 export default SortOffer;
