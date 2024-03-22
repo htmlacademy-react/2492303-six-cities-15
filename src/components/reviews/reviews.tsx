@@ -14,7 +14,7 @@ export const Reviews: FC = () => {
     if (params.id) {
       dispatch(fetchOfferCommentsAction(params.id));
     }
-  }, [params.id]);
+  }, [dispatch, params.id]);
 
   return (
     <div>

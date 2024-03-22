@@ -46,7 +46,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
       <div className='reviews__rating-form form__rating'>
         {raitings.map(({ value, label }) => (
           <Fragment key = {value}>
-            <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio" onChange={handleFieldChange} defaultValue={value} checked={value === formData.rating}/>
+            <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio" onChange={handleFieldChange}/>
             <label className="reviews__rating-label form__rating-label" htmlFor={`${value}-stars`} title={label}>
               <svg className ="form__star-image" width="37" height="33">
                 <use xlinkHref="#icon-star"></use>
@@ -74,7 +74,6 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
           className='reviews__submit form__submit button'
           type='submit'
           disabled={formData.rating < 1 || formData.comment.length < 50 }
-
         >
           Submit
         </button>

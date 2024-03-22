@@ -21,4 +21,3 @@ export const OfferList: FC<TOfferListPageProps> = ({ cardAmount, offers, handler
     }
   </div>
 );
-

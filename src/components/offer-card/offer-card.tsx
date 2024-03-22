@@ -1,6 +1,8 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute, TOffer } from '../../const';
+import { AddFavoriteAction } from '../../store/api-actions';
+import { useAppDispatch } from '../hooks';
 
 export type TOfferCardPageProps = {
   offer: TOffer;
@@ -8,6 +10,7 @@ export type TOfferCardPageProps = {
 }
 
 export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
+  const dispatch = useAppDispatch();
   const handleMouseOver = () => {
     const currentPoint = offer.city.location;
     if (currentPoint){
@@ -19,6 +22,10 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
   };
   return(
     <article className="cities__card place-card">
+      {offer.isPremium &&
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>}
       <div
         className="cities__image-wrapper place-card__image-wrapper"
         onMouseOver={handleMouseOver}
@@ -27,7 +34,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
         <Link to= {AppRoute.Offer.replace(':id', String(offer.id))}>
           <img
             className="place-card__image"
-            src="img/room.jpg"
+            src= {offer.previewImage}
             width={260}
             height={200}
             alt="Place image"
@@ -43,8 +50,11 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
             </span>
           </div>
           <button
-            className="place-card__bookmark-button place-card__bookmark-button--active button"
+            className= {offer.isFavorite === false ? 'place-card__bookmark-button button' : 'place-card__bookmark-button place-card__bookmark-button--active button'}
             type="button"
+            onClick={() => {
+              dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
+            }}
           >
             <svg
               className="place-card__bookmark-icon"
@@ -53,7 +63,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
             >
               <use xlinkHref="#icon-bookmark" />
             </svg>
-            <span className="visually-hidden">In  </span>
+            <span className="visually-hidden">To bookmarks  </span>
           </button>
         </div>
         <div className="place-card__rating rating">
@@ -64,6 +74,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
         </div>
         <h2 className="place-card__name">
           <a href="#">{offer.title}</a>
+          {offer.isFavorite}
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>

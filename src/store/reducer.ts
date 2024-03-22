@@ -1,4 +1,4 @@
-import { AddCommentAction, checkAuthAction, fetchOfferAction, fetchOfferCommentsAction, fetchOfferNearAction, fetchOffersAction, loginAction, logoutAction } from './api-actions';
+import { AddCommentAction, AddFavoriteAction, checkAuthAction, fetchFavoriteAction, fetchOfferAction, fetchOfferCommentsAction, fetchOfferNearAction, fetchOffersAction, loginAction, logoutAction } from './api-actions';
 import {createReducer} from '@reduxjs/toolkit';
 import {updateCity, insertOffer} from './action';
 import { AuthorizationStatus, TCity, TComments, TOffer, TOfferId } from '../const';
@@ -13,6 +13,7 @@ export type InitalState = {
   hasError: boolean;
   authorizationStatus: AuthorizationStatus;
   comments?: TComments[];
+  favorite?: TOffer[];
 }
 
 const initialState: InitalState = {
@@ -68,6 +69,12 @@ export const reducer = createReducer(initialState, (builder) => {
       state.comments = action.payload;
     })
     .addCase(AddCommentAction.fulfilled, (state) => {
+      state.hasError = false;
+    })
+    .addCase(fetchFavoriteAction.fulfilled, (state, action) => {
+      state.favorite = action.payload;
+    })
+    .addCase(AddFavoriteAction.fulfilled, (state) => {
       state.hasError = false;
     });
 });

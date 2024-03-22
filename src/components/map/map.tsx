@@ -62,7 +62,7 @@ function Map(props: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, points, selectedPoint, activeCity]);
+  }, [map, points, selectedPoint]);
 
   return <div style={{height: '100%'}} ref={mapRef}></div>;
 }

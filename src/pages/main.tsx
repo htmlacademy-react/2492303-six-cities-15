@@ -30,6 +30,7 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
     dispatch(updateCity(city));
   };
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const favorite = useAppSelector((state) => state.favorite);
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -50,16 +51,15 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
               <nav className="header__nav">
                 <ul className="header__nav-list">
                   <li className="header__nav-item user">
-                    <a
+                    <Link to={AppRoute.Favorites}
                       className="header__nav-link header__nav-link--profile"
-                      href="#"
                     >
                       <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                      <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
+                      <span className="header__user-name user__name" >
+                        Oliver.conner@gmail.com
                       </span>
-                      <span className="header__favorite-count">3</span>
-                    </a>
+                      <span className="header__favorite-count">{favorite?.length}</span>
+                    </Link>
                   </li>
                   <li className="header__nav-item">
                     <Link to={AppRoute.Main} className="header__nav-link" >

@@ -2,7 +2,7 @@ import { FC, PropsWithChildren } from 'react';
 import { MainPage, TMainPageProps } from '../pages/main';
 import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, TFavoriteData } from '../const';
+import { AppRoute, AuthorizationStatus } from '../const';
 import Login from '../pages/login';
 import {Favorites} from '../pages/favorites';
 import { NotFoundScreen } from '../pages/not-found-screen';
@@ -11,7 +11,6 @@ import Offer from '../pages/offer';
 import { useAppSelector } from '../components/hooks';
 
 export type TAppProps = {
-  favoriteData: TFavoriteData[];
   mainPageProps: TMainPageProps;
 }
 
@@ -40,7 +39,7 @@ export const App: FC<PropsWithChildren<TAppProps>> = (props: TAppProps) => {
               <PrivateRoute
                 authorizationStatus={authorizationStatus}
               >
-                <Favorites favoriteData={props.favoriteData} cardAmount={3}/>
+                <Favorites/>
               </PrivateRoute>
             }
           />

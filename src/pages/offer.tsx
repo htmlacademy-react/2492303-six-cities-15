@@ -18,7 +18,7 @@ function Offer(): JSX.Element {
       dispatch(fetchOfferAction(params.id));
       dispatch(fetchOfferNearAction(params.id));
     }
-  }, [params]);
+  }, [dispatch, params]);
   const activeCity = useAppSelector((state) => state.city);
   const offersNear = useAppSelector((state) => state.offersNear);
   const offers = useAppSelector((state) => state.offers);
@@ -175,7 +175,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offers={offersNear} cardAmount={3} handlerHover={handlerHover} city={activeCity}/>
+              <OfferList offers={offersNear} cardAmount={4} handlerHover={handlerHover} city={activeCity}/>
             </div>
           </section>
         </div>

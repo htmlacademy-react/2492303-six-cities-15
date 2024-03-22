@@ -66,7 +66,9 @@ function Login() : JSX.Element {
                 />
               </div>
               <button className='login__submit form__submit button' type='submit'>
-                Sign in
+                <Link to={AppRoute.Main}>
+                  Sign in
+                </Link>
               </button>
             </form>
           </section>
