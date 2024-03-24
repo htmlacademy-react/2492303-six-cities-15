@@ -1,17 +1,19 @@
 import {Link, useParams} from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, Point, TOffer } from '../const';
+import { AppRoute, AuthorizationStatus} from '../const';
 import { FormReview } from '../components/form-review/form-review';
 import { Reviews } from '../components/reviews/reviews';
 import Map from '../components/map/map';
-import { OfferList } from '../components/offer-list/offer-list';
-import { useEffect, useState } from 'react';
+//import { OfferList } from '../components/offer-list/offer-list';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../components/hooks';
 import { fetchOfferAction, fetchOfferNearAction } from '../store/api-actions';
 import { NotFoundScreen } from './not-found-screen';
+import { NearOfferList } from '../components/offer-list/near-offer-list';
 
 function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
+  const favorite = useAppSelector((state) => state.favorite);
 
   useEffect (() => {
     if (params.id) {
@@ -21,12 +23,8 @@ function Offer(): JSX.Element {
   }, [dispatch, params]);
   const activeCity = useAppSelector((state) => state.city);
   const offersNear = useAppSelector((state) => state.offersNear);
-  const offers = useAppSelector((state) => state.offers);
+  //const offers = useAppSelector((state) => state.offers);
   const offer = useAppSelector((state) => state.offer);
-  const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
-  const handlerHover = (offerS?: TOffer) => {
-    setSelectedPoint(offerS ? offerS.location : null);
-  };
   const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
   const hasError = useAppSelector(((state) => state.hasError));
   if (hasError) {
@@ -61,7 +59,7 @@ function Offer(): JSX.Element {
                     <span className='header__user-name user__name'>
                       Oliver.conner@gmail.com
                     </span>
-                    <span className='header__favorite-count'>3</span>
+                    <span className='header__favorite-count'>{favorite?.length}</span>
                   </Link>
                 </li>
                 <li className='header__nav-item'>
@@ -98,7 +96,7 @@ function Offer(): JSX.Element {
                 <h1 className='offer__name'>
                   {offer?.title}
                 </h1>
-                <button className='offer__bookmark-button button' type='button'>
+                <button className= {offer?.isFavorite === false ? 'offer__bookmark-button button' : 'offer__bookmark-button--active'}>
                   <svg className='offer__bookmark-icon' width={31} height={33}>
                     <use xlinkHref='#icon-bookmark' />
                   </svg>
@@ -166,7 +164,7 @@ function Offer(): JSX.Element {
             </div>
           </div>
           <section className='offer__map map'>
-            <Map activeCity={activeCity} points={offers.map((item)=> item.location)} selectedPoint={selectedPoint} />
+            <Map activeCity={activeCity} points={offersNear.map((item)=> item.location).slice(0,3)} selectedPoint={null} />
           </section>
         </section>
         <div className='container'>
@@ -175,7 +173,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offers={offersNear} cardAmount={4} handlerHover={handlerHover} city={activeCity}/>
+              <NearOfferList offers={offersNear} cardAmount={3}/>
             </div>
           </section>
         </div>
