@@ -11,7 +11,7 @@ export const Favorites: FC = () => {
   useEffect (() => {
     dispatch(fetchFavoriteAction(''));
   },[dispatch]);
-  const favorite = useAppSelector((state) => state.favorite);
+  const favorite = useAppSelector((state) => state.DATA.favorite);
   return (
     <div className='page'>
       <header className='header'>

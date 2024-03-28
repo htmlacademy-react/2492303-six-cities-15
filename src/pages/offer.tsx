@@ -13,7 +13,7 @@ import { NearOfferList } from '../components/offer-list/near-offer-list';
 function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const favorite = useAppSelector((state) => state.favorite);
+  const favorite = useAppSelector((state) => state.DATA.favorite);
 
   useEffect (() => {
     if (params.id) {
@@ -21,12 +21,12 @@ function Offer(): JSX.Element {
       dispatch(fetchOfferNearAction(params.id));
     }
   }, [dispatch, params]);
-  const activeCity = useAppSelector((state) => state.city);
-  const offersNear = useAppSelector((state) => state.offersNear);
+  const activeCity = useAppSelector((state) => state.DATA.city);
+  const offersNear = useAppSelector((state) => state.DATA.offersNear);
   //const offers = useAppSelector((state) => state.offers);
-  const offer = useAppSelector((state) => state.offer);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const hasError = useAppSelector(((state) => state.hasError));
+  const offer = useAppSelector((state) => state.DATA.offer);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+  const hasError = useAppSelector(((state) => state.DATA.hasError));
   if (hasError) {
     return (
       <NotFoundScreen />

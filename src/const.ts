@@ -126,3 +126,8 @@ export type TAddFavorite = {
   status?: number;
   offerId?: string;
 };
+
+export enum NameSpace {
+  Data = 'DATA',
+  User = 'USER',
+}

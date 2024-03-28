@@ -17,20 +17,20 @@ export type TMainPageProps = {
 }
 
 export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
-  const offers = useAppSelector((state) => state.offers);
+  const offers = useAppSelector((state) => state.DATA.offers);
   const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
   const handlerHover = (offer?: TOffer) => {
     setSelectedPoint(offer ? offer.location : null);
   };
-  const activeCity = useAppSelector((state) => state.city);
-  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+  const activeCity = useAppSelector((state) => state.DATA.city);
+  const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
   const dispatch = useAppDispatch();
   const handleClick = (city: TCity) => {
     dispatch(updateCity(city));
   };
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const favorite = useAppSelector((state) => state.favorite);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+  const favorite = useAppSelector((state) => state.DATA.favorite);
   return (
     <div className="page page--gray page--main">
       <header className="header">

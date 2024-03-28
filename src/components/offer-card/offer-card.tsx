@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute, TOffer } from '../../const';
 import { AddFavoriteAction } from '../../store/api-actions';
 import { useAppDispatch } from '../hooks';
@@ -20,8 +20,13 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
   const handleMouseOut = () => {
     handlerHover();
   };
+  const handleClick = (event: { stopPropagation: () => void}) => {
+    event.stopPropagation();
+    dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
+  };
+  const navigate = useNavigate();
   return(
-    <Link to= {AppRoute.Offer.replace(':id', String(offer?.id))}>
+    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))}>
       <article className="cities__card place-card">
         {offer?.isPremium &&
           <div className="place-card__mark">
@@ -51,9 +56,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
             <button
               className= {offer?.isFavorite === false ? 'place-card__bookmark-button button' : 'place-card__bookmark-button place-card__bookmark-button--active button'}
               type="button"
-              onClick={() => {
-                dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
-              }}
+              onClick={handleClick}
             >
               <svg
                 className="place-card__bookmark-icon"
@@ -78,6 +81,6 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
           <p className="place-card__type">{offer?.type}</p>
         </div>
       </article>
-    </Link>
+    </div>
   );
 };
