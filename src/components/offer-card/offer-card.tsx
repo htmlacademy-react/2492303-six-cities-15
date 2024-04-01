@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, TOffer } from '../../const';
 import { AddFavoriteAction } from '../../store/api-actions';
@@ -11,22 +11,23 @@ export type TOfferCardPageProps = {
 
 export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
   const dispatch = useAppDispatch();
-  const handleMouseOver = () => {
-    const currentPoint = offer.city.location;
-    if (currentPoint){
+
+  const handleMouseOver = useCallback(() => {
+    if (offer){
       handlerHover(offer);
-    }
-  };
-  const handleMouseOut = () => {
+    };
+    console.log(offer)
+  }, [handlerHover, offer]);
+  const handleMouseOut = useCallback(() => {
     handlerHover();
-  };
+  },[handlerHover]);
   const handleClick = (event: { stopPropagation: () => void}) => {
     event.stopPropagation();
     dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
   };
   const navigate = useNavigate();
   return(
-    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))}>
+    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}>
       <article className="cities__card place-card">
         {offer?.isPremium &&
           <div className="place-card__mark">
