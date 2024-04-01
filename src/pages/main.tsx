@@ -11,6 +11,8 @@ import { updateCity } from '../store/action.ts';
 import { MoonLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
 import { logoutAction } from '../store/api-actions.ts';
+import { useSelector } from 'react-redux';
+import { makeOffersFilter } from '../store/offer-process/selectors.ts';
 
 export type TMainPageProps = {
   cardAmount: number;
@@ -18,6 +20,7 @@ export type TMainPageProps = {
 
 export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
   const offers = useAppSelector((state) => state.DATA.offers);
+  const offersFilter = useSelector(makeOffersFilter);
   const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
   const handlerHover = useCallback (
@@ -108,7 +111,7 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} places to stay in {activeCity.name}</b>
               <Popular setTypeS={setTypeS}/>
-              <OfferList offers={SortOffer(offers,typeS)} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
+              <OfferList offers={SortOffer(offersFilter,typeS)} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
