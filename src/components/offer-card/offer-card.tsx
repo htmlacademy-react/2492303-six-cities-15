@@ -1,42 +1,42 @@
-import { FC, useCallback, useMemo } from 'react';
+import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, TOffer } from '../../const';
 import { AddFavoriteAction } from '../../store/api-actions';
 import { useAppDispatch } from '../hooks';
+import { memo } from 'react';
 
 export type TOfferCardPageProps = {
   offer: TOffer;
   handlerHover: (offer?: TOffer) => void;
 }
 
-export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
+const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
   const dispatch = useAppDispatch();
-
-  const handleMouseOver = useCallback(() => {
+  const handleMouseOver = () => {
     if (offer){
       handlerHover(offer);
-    };
-    console.log(offer)
-  }, [handlerHover, offer]);
-  const handleMouseOut = useCallback(() => {
+    }
+  };
+  const handleMouseOut = () => {
     handlerHover();
-  },[handlerHover]);
+  };
   const handleClick = (event: { stopPropagation: () => void}) => {
     event.stopPropagation();
     dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
   };
   const navigate = useNavigate();
   return(
-    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}>
+    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseOut}
+    >
       <article className="cities__card place-card">
         {offer?.isPremium &&
-          <div className="place-card__mark">
-            <span>Premium</span>
-          </div>}
+            <div className="place-card__mark">
+              <span>Premium</span>
+            </div>}
         <div
           className="cities__image-wrapper place-card__image-wrapper"
-          onMouseOver={handleMouseOver}
-          onMouseLeave={handleMouseOut}
         >
           <img
             className="place-card__image"
@@ -51,7 +51,7 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
             <div className="place-card__price">
               <b className="place-card__price-value">{offer?.price}€</b>
               <span className="place-card__price-text">
-              /&nbsp;{offer?.type}
+                /&nbsp;{offer?.type}
               </span>
             </div>
             <button
@@ -85,3 +85,5 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
     </div>
   );
 };
+const OfferMemo = memo(OfferCard);
+export default OfferMemo;

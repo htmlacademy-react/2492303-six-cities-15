@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
 import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
 import Map from '../components/map/map.tsx';
@@ -20,9 +20,11 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
   const offers = useAppSelector((state) => state.DATA.offers);
   const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
-  const handlerHover = (offer?: TOffer) => {
-    setSelectedPoint(offer ? offer.location : null);
-  };
+  const handlerHover = useCallback (
+    (offer?: TOffer) => {
+      setSelectedPoint(offer ? offer.location : null);
+    }, []
+  );
   const activeCity = useAppSelector((state) => state.DATA.city);
   const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
   const dispatch = useAppDispatch();
