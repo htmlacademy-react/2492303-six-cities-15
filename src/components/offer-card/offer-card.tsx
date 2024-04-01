@@ -7,18 +7,21 @@ import { memo } from 'react';
 
 export type TOfferCardPageProps = {
   offer: TOffer;
-  handlerHover: (offer?: TOffer) => void;
+  handlerHover?: (offer?: TOffer) => void;
+  typeCard: 'offer' | 'near';
 }
 
-const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
+const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => {
   const dispatch = useAppDispatch();
   const handleMouseOver = () => {
-    if (offer){
+    if (handlerHover){
       handlerHover(offer);
     }
   };
   const handleMouseOut = () => {
-    handlerHover();
+    if (handlerHover){
+      handlerHover();
+    }
   };
   const handleClick = (event: { stopPropagation: () => void}) => {
     event.stopPropagation();
@@ -30,13 +33,13 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
       onMouseOver={handleMouseOver}
       onMouseLeave={handleMouseOut}
     >
-      <article className="cities__card place-card">
+      <article className= {typeCard === 'offer' ? 'cities__card place-card' : 'near-places__card place-card'}>
         {offer?.isPremium &&
             <div className="place-card__mark">
               <span>Premium</span>
             </div>}
         <div
-          className="cities__image-wrapper place-card__image-wrapper"
+          className= {typeCard === 'offer' ? 'cities__image-wrapper place-card__image-wrapper' : 'near-places__image-wrapper place-card__image-wrapper'}
         >
           <img
             className="place-card__image"

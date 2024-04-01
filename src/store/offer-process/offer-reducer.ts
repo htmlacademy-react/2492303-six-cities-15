@@ -61,8 +61,13 @@ export const OfferData = createSlice({
       .addCase(fetchFavoriteAction.fulfilled, (state, action) => {
         state.favorite = action.payload;
       })
-      .addCase(AddFavoriteAction.fulfilled, (state) => {
+      .addCase(AddFavoriteAction.fulfilled, (state, action) => {
         state.hasError = false;
+        const index = state.offersNear.findIndex((item) => item.id === action.payload.id);
+        if (index) {
+          state.offersNear[index].isFavorite = action.payload.isFavorite;
+        }
+
       });
   }
 });
