@@ -6,27 +6,25 @@ import Map from '../components/map/map';
 //import { OfferList } from '../components/offer-list/offer-list';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../components/hooks';
-import { fetchOfferAction, fetchOfferNearAction } from '../store/api-actions';
+import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction } from '../store/api-actions';
 import { NotFoundScreen } from './not-found-screen';
-import { NearOfferList } from '../components/offer-list/near-offer-list';
+import { OfferList } from '../components/offer-list/offer-list';
+import { City } from '../mocks/city';
 
 function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const favorite = useAppSelector((state) => state.favorite);
-
+  const offer = useAppSelector((state) => state.DATA.offer);
+  const favorite = useAppSelector((state) => state.DATA.favorite);
   useEffect (() => {
-    if (params.id) {
-      dispatch(fetchOfferAction(params.id));
-      dispatch(fetchOfferNearAction(params.id));
-    }
+    dispatch(fetchOfferAction(String(params?.id)));
+    dispatch(fetchFavoriteAction(''));
+    dispatch(fetchOfferNearAction(String(params?.id)));
   }, [dispatch, params]);
-  const activeCity = useAppSelector((state) => state.city);
-  const offersNear = useAppSelector((state) => state.offersNear);
-  //const offers = useAppSelector((state) => state.offers);
-  const offer = useAppSelector((state) => state.offer);
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const hasError = useAppSelector(((state) => state.hasError));
+  const activeCity = useAppSelector((state) => state.DATA.city);
+  const OffersNear = useAppSelector((state) => state.DATA.offersNear);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+  const hasError = useAppSelector(((state) => state.DATA.hasError));
   if (hasError) {
     return (
       <NotFoundScreen />
@@ -96,7 +94,11 @@ function Offer(): JSX.Element {
                 <h1 className='offer__name'>
                   {offer?.title}
                 </h1>
-                <button className= {offer?.isFavorite === false ? 'offer__bookmark-button button' : 'offer__bookmark-button--active'}>
+                <button className= {`offer__bookmark-button button  ${offer?.isFavorite ? 'offer__bookmark-button--active button' : ''}`}
+                  onClick = {() => {
+                    dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
+                  }}
+                >
                   <svg className='offer__bookmark-icon' width={31} height={33}>
                     <use xlinkHref='#icon-bookmark' />
                   </svg>
@@ -164,7 +166,7 @@ function Offer(): JSX.Element {
             </div>
           </div>
           <section className='offer__map map'>
-            <Map activeCity={activeCity} points={offersNear.map((item)=> item.location).slice(0,3)} selectedPoint={null} />
+            <Map activeCity={activeCity} points={OffersNear.map((item)=> item.location).slice(0,3)} selectedPoint={null} />
           </section>
         </section>
         <div className='container'>
@@ -173,7 +175,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <NearOfferList offers={offersNear} cardAmount={3}/>
+              <OfferList offers={OffersNear.slice(0,3)} cardAmount={3} city={offer?.city || City[0]}/>
             </div>
           </section>
         </div>

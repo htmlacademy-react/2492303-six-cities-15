@@ -119,17 +119,20 @@ export const AddCommentAction = createAsyncThunk<void, TAddComment, {
   },
 );
 
-export const AddFavoriteAction = createAsyncThunk<void, TAddFavorite, {
+export const AddFavoriteAction = createAsyncThunk<TOfferId, TAddFavorite, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'addFavorite',
   async ({status, offerId}, {dispatch, extra: api}) => {
-    await api.post<TAddFavorite>(`${APIRoute.Favorites + offerId }/${status}`);
+    const {data} = await api.post<TOfferId>(`${APIRoute.Favorites + offerId }/${status}`);
     if (offerId){
       dispatch(fetchFavoriteAction(offerId));
+      dispatch(fetchOfferAction(offerId));
       dispatch(fetchOffersAction());
+      //dispatch(fetchOfferNearAction(offerId));
     }
+    return data;
   },
 );

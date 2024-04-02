@@ -1,36 +1,45 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppRoute, TOffer } from '../../const';
 import { AddFavoriteAction } from '../../store/api-actions';
 import { useAppDispatch } from '../hooks';
+import { memo } from 'react';
 
 export type TOfferCardPageProps = {
   offer: TOffer;
-  handlerHover: (offer?: TOffer) => void;
+  handlerHover?: (offer?: TOffer) => void;
+  typeCard: 'offer' | 'near';
 }
 
-export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
+const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => {
   const dispatch = useAppDispatch();
   const handleMouseOver = () => {
-    const currentPoint = offer.city.location;
-    if (currentPoint){
+    if (handlerHover){
       handlerHover(offer);
     }
   };
   const handleMouseOut = () => {
-    handlerHover();
+    if (handlerHover){
+      handlerHover();
+    }
   };
+  const handleClick = (event: { stopPropagation: () => void}) => {
+    event.stopPropagation();
+    dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
+  };
+  const navigate = useNavigate();
   return(
-    <Link to= {AppRoute.Offer.replace(':id', String(offer?.id))}>
-      <article className="cities__card place-card">
+    <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseOut}
+    >
+      <article className= {typeCard === 'offer' ? 'cities__card place-card' : 'near-places__card place-card'}>
         {offer?.isPremium &&
-          <div className="place-card__mark">
-            <span>Premium</span>
-          </div>}
+            <div className="place-card__mark">
+              <span>Premium</span>
+            </div>}
         <div
-          className="cities__image-wrapper place-card__image-wrapper"
-          onMouseOver={handleMouseOver}
-          onMouseLeave={handleMouseOut}
+          className= {typeCard === 'offer' ? 'cities__image-wrapper place-card__image-wrapper' : 'near-places__image-wrapper place-card__image-wrapper'}
         >
           <img
             className="place-card__image"
@@ -45,15 +54,13 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
             <div className="place-card__price">
               <b className="place-card__price-value">{offer?.price}€</b>
               <span className="place-card__price-text">
-              /&nbsp;{offer?.type}
+                /&nbsp;{offer?.type}
               </span>
             </div>
             <button
               className= {offer?.isFavorite === false ? 'place-card__bookmark-button button' : 'place-card__bookmark-button place-card__bookmark-button--active button'}
               type="button"
-              onClick={() => {
-                dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
-              }}
+              onClick={handleClick}
             >
               <svg
                 className="place-card__bookmark-icon"
@@ -78,6 +85,8 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover}) => {
           <p className="place-card__type">{offer?.type}</p>
         </div>
       </article>
-    </Link>
+    </div>
   );
 };
+const OfferMemo = memo(OfferCard);
+export default OfferMemo;

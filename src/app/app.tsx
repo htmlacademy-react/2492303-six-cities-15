@@ -15,7 +15,7 @@ export type TAppProps = {
 }
 
 export const App: FC<PropsWithChildren<TAppProps>> = (props: TAppProps) => {
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
 
   return (
     <HelmetProvider>

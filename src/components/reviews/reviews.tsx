@@ -8,7 +8,7 @@ import { fetchOfferCommentsAction } from '../../store/api-actions';
 export const Reviews: FC = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const reviewsData = useAppSelector((state) => state.comments);
+  const reviewsData = useAppSelector((state) => state.DATA.comments);
 
   useEffect (() => {
     if (params.id) {

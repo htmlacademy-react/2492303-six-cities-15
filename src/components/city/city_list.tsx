@@ -7,7 +7,7 @@ export type TCityProps = {
 }
 
 export const CityList: FC<TCityProps> = ({title}) =>{
-  const activeCity = useAppSelector((state) => state.city);
+  const activeCity = useAppSelector((state) => state.DATA.city);
   return (
     <li className="locations__item">
       <Link to={'#'} className={`locations__item-link ${activeCity.name === title ? 'tabs__item--active' : 'tabs__item'}`}>

@@ -14,9 +14,14 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
   });
 
   const dispatch = useAppDispatch();
-  const handleFieldChange = (event:ChangeEvent<HTMLInputElement|HTMLTextAreaElement>) => {
-    const {name, value} = event.target;
-    setFormData({...formData, [name]: value});
+  const handleFieldChange = (event:ChangeEvent<HTMLInputElement>) => {
+    const {value} = event.target;
+    setFormData({...formData, rating: parseInt(value, 10)});
+  };
+
+  const handleCommentChange = (event:ChangeEvent<HTMLTextAreaElement>) => {
+    const { value} = event.target;
+    setFormData({...formData, comment: value});
   };
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -46,7 +51,9 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
       <div className='reviews__rating-form form__rating'>
         {raitings.map(({ value, label }) => (
           <Fragment key = {value}>
-            <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio" onChange={handleFieldChange}/>
+            <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio"
+              onChange={handleFieldChange} value={value} checked={formData.rating === value}
+            />
             <label className="reviews__rating-label form__rating-label" htmlFor={`${value}-stars`} title={label}>
               <svg className ="form__star-image" width="37" height="33">
                 <use xlinkHref="#icon-star"></use>
@@ -60,7 +67,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         id='comment'
         name='comment'
         placeholder='Tell how was your stay, what you like and what can be improved'
-        onChange={handleFieldChange}
+        onChange={handleCommentChange}
         value={formData.comment}
       />
       <div className='reviews__button-wrapper'>

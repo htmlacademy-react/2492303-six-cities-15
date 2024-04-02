@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
 import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
 import Map from '../components/map/map.tsx';
@@ -11,26 +11,31 @@ import { updateCity } from '../store/action.ts';
 import { MoonLoader } from 'react-spinners';
 import { Link } from 'react-router-dom';
 import { logoutAction } from '../store/api-actions.ts';
+import { useSelector } from 'react-redux';
+import { makeOffersFilter } from '../store/offer-process/selectors.ts';
 
 export type TMainPageProps = {
   cardAmount: number;
 }
 
 export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
-  const offers = useAppSelector((state) => state.offers);
+  const offers = useAppSelector((state) => state.DATA.offers);
+  const offersFilter = useSelector(makeOffersFilter);
   const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
-  const handlerHover = (offer?: TOffer) => {
-    setSelectedPoint(offer ? offer.location : null);
-  };
-  const activeCity = useAppSelector((state) => state.city);
-  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+  const handlerHover = useCallback (
+    (offer?: TOffer) => {
+      setSelectedPoint(offer ? offer.location : null);
+    }, []
+  );
+  const activeCity = useAppSelector((state) => state.DATA.city);
+  const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
   const dispatch = useAppDispatch();
   const handleClick = (city: TCity) => {
     dispatch(updateCity(city));
   };
-  const authorizationStatus = useAppSelector((state) => state.authorizationStatus);
-  const favorite = useAppSelector((state) => state.favorite);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+  const favorite = useAppSelector((state) => state.DATA.favorite);
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -106,7 +111,7 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} places to stay in {activeCity.name}</b>
               <Popular setTypeS={setTypeS}/>
-              <OfferList offers={SortOffer(offers,typeS)} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
+              <OfferList offers={SortOffer(offersFilter,typeS)} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
