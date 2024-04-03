@@ -89,4 +89,5 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
   );
 };
 const OfferMemo = memo(OfferCard);
+OfferMemo.displayName = 'OfferCard';
 export default OfferMemo;

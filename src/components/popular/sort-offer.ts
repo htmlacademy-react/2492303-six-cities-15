@@ -12,9 +12,6 @@ function SortOffer(offersData: TOffer[], typeS: string): TOffer[] {
   } else {
     return offersData;
   }
-  /* if (typeS === 'popular'){
-    return offersData.slice().sort((a, b) => a. - b.isFavorite);
-  }*/
 }
 
 export default SortOffer;

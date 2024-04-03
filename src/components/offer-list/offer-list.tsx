@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { TCity, TOffer } from '../../const';
-import OfferMemo from '../offer-card/offer-card';
+import OfferCard from '../offer-card/offer-card';
 
 export type TOfferListPageProps = {
   cardAmount: number;
@@ -13,7 +13,7 @@ export const OfferList: FC<TOfferListPageProps> = ({ cardAmount, offers, handler
   <div className='cities__places-list places__list tabs__content'>
     {
       (cardAmount > 0) && offers.filter((item) => item.city.name === city.name).map((item) => (
-        <OfferMemo key={item.id} offer={item} handlerHover={handlerHover} typeCard={'offer'}/>
+        <OfferCard key={item.id} offer={item} handlerHover={handlerHover} typeCard={'offer'}/>
       ))
     }
     {
