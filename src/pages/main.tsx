@@ -3,7 +3,7 @@ import { OfferList } from '../components/offer-list/offer-list';
 import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
 import Map from '../components/map/map.tsx';
 import { CityList } from '../components/city/city_list.tsx';
-import { City } from '../mocks/city.ts';
+import { cities } from '../mocks/city.ts';
 import { Popular } from '../components/popular/popular.tsx';
 import SortOffer from '../components/popular/sort-offer.ts';
 import { useAppDispatch, useAppSelector } from '../components/hooks/index.ts';
@@ -14,12 +14,9 @@ import { logoutAction } from '../store/api-actions.ts';
 import { useSelector } from 'react-redux';
 import { makeOffersFilter } from '../store/offer-process/selectors.ts';
 
-export type TMainPageProps = {
-  cardAmount: number;
-}
-
-export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
+export const MainPage: FC = () => {
   const offers = useAppSelector((state) => state.DATA.offers);
+  const user = useAppSelector((state) => state.USER.User);
   const offersFilter = useSelector(makeOffersFilter);
   const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
@@ -35,9 +32,9 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
     dispatch(updateCity(city));
   };
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
-  const favorite = useAppSelector((state) => state.DATA.favorite);
+  const favorite = useAppSelector((state) => state.DATA.favorites);
   return (
-    <div className="page page--gray page--main">
+    <div className="page page--gray page--main" data-testid="main-page">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -59,9 +56,14 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
                     <Link to={AppRoute.Favorites}
                       className="header__nav-link header__nav-link--profile"
                     >
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                        <img
+                          style={{borderRadius: 10}}
+                          src={user?.avatarUrl}
+                        />
+                      </div>
                       <span className="header__user-name user__name" >
-                        Oliver.conner@gmail.com
+                        {user?.email}
                       </span>
                       <span className="header__favorite-count">{favorite?.length}</span>
                     </Link>
@@ -82,7 +84,7 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
               <nav className="header__nav">
                 <ul className="header__nav-list">
                   <li className="header__nav-item user">
-                    <Link to={AppRoute.Login} className="header__nav-link header__nav-link--profile">
+                    <Link to={AppRoute.Login} className="header__login">
                       Sign in
                     </Link>
                   </li>
@@ -91,35 +93,53 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
           </div>
         </div>
       </header>
-      <main className="page__main page__main--index">
+      <main className= {`${offers.length > 0 ? 'page__main page__main--index' : 'page__main page__main--index page__main--index-empty'}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
             <ul className="locations__list tabs__list" >
-              {City.map((item) => (
-                <div key={item.id} onClick={() => handleClick(item)}>
+              {cities.map((item) => (
+                <li className="locations__item" key={item.id} onClick={() => handleClick(item)}>
                   <CityList key={item.id} title={item.name}/>
-                </div>
+                </li>
               ))}
             </ul>
           </section>
         </div>
+        {offers.length > 0 &&
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               {isOfferLoading && <MoonLoader/>}
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} places to stay in {activeCity.name}</b>
+              <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} {offersFilter.length === 1 ? 'place' : 'places' } to stay in {activeCity.name}</b>
               <Popular setTypeS={setTypeS}/>
-              <OfferList offers={SortOffer(offersFilter,typeS)} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
+              <OfferList offers={SortOffer(offersFilter,typeS)} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map activeCity={activeCity} points={offers.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                {
+                  offersFilter.length > 0 && <Map activeCity={activeCity} points={offersFilter.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                }
               </section>
             </div>
           </div>
-        </div>
+        </div>}
+        {offers.length === 0 &&
+        <div className="cities">
+          <div className='cities__places-container cities__places-container--empty container'>
+            <section className='cities__no-places'>
+              <div className='cities__status-wrapper tabs__content'>
+                <b className='cities__status'>No places to stay available</b>
+                <p className='cities__status-description'>
+                  We could not find any property available at the moment in{' '}
+                  {activeCity.name}
+                </p>
+              </div>
+            </section>
+            <div className='cities__right-section'/>
+          </div>
+        </div>}
       </main>
     </div>
   );

@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
-import { AppRoute } from '../const';
-import { useAppDispatch } from '../components/hooks';
+import { Link, Navigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../const';
+import { useAppDispatch, useAppSelector } from '../components/hooks';
 import { loginAction } from '../store/api-actions';
 import { FormEvent, useRef } from 'react';
 
@@ -9,10 +9,9 @@ function Login() : JSX.Element {
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useAppDispatch();
-
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
 
+    evt.preventDefault();
     if (loginRef.current !== null && passwordRef.current !== null) {
       dispatch(loginAction({
         login: loginRef.current.value,
@@ -20,6 +19,12 @@ function Login() : JSX.Element {
       }));
     }
   };
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
+  if (authorizationStatus === AuthorizationStatus.Auth){
+    return <Navigate to={AppRoute.Main} />;
+  }
+
   return(
     <div className='page page--gray page--login'>
       <header className='header'>
@@ -40,7 +45,7 @@ function Login() : JSX.Element {
           </div>
         </div>
       </header>
-      <main className='page__main page__main--login'>
+      <main className='page__main page__main--login' data-testid="login-page">
         <div className='page__login-container container'>
           <section className='login'>
             <h1 className='login__title'>Sign in</h1>
@@ -53,6 +58,7 @@ function Login() : JSX.Element {
                   name='email'
                   placeholder='Email'
                   ref={loginRef}
+                  required
                 />
               </div>
               <div className='login__input-wrapper form__input-wrapper'>
@@ -63,6 +69,8 @@ function Login() : JSX.Element {
                   name='password'
                   placeholder='Password'
                   ref={passwordRef}
+                  required
+                  pattern="(?=^.{2,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Za-z]).*"
                 />
               </div>
               <button className='login__submit form__submit button' type='submit'>

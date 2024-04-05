@@ -18,6 +18,15 @@ export type TOffer = {
   rating: number;
 }
 
+export type TOfferFull = TOffer & {
+  description: string;
+  images: string[];
+  goods: string[];
+  host: THost;
+  bedrooms: number;
+  maxAdults: number;
+}
+
 export type TFavoriteData = {
   id: number;
   name: string;
@@ -77,24 +86,6 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
-export type TOfferId = {
-  id: string;
-  title: string;
-  description: string;
-  type: string;
-  price: number;
-  images: string[];
-  city: TCity;
-  location: Point;
-  goods: string[];
-  host: THost;
-  isPremium: boolean;
-  isFavorite: boolean;
-  rating:	number;
-  bedrooms: number;
-  maxAdults: number;
-};
-
 export type THost = {
   isPro:	boolean;
   name:	string;
@@ -111,6 +102,7 @@ export type TComments = {
 
 
 export type TUser = {
+  email: string;
   name: string;
   avatarUrl: string;
   isPro: false;
