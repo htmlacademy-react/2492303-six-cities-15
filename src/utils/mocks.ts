@@ -1,5 +1,4 @@
 import {AuthorizationStatus} from '../const';
-/*import {QuestionArtist, QuestionGenre} from '../types/question';*/
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { createAPI } from '../services/api';

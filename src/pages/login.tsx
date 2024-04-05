@@ -9,10 +9,9 @@ function Login() : JSX.Element {
   const passwordRef = useRef<HTMLInputElement | null>(null);
 
   const dispatch = useAppDispatch();
-
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
-    evt.preventDefault();
 
+    evt.preventDefault();
     if (loginRef.current !== null && passwordRef.current !== null) {
       dispatch(loginAction({
         login: loginRef.current.value,
@@ -71,6 +70,7 @@ function Login() : JSX.Element {
                   placeholder='Password'
                   ref={passwordRef}
                   required
+                  pattern="(?=^.{2,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Za-z]).*"
                 />
               </div>
               <button className='login__submit form__submit button' type='submit'>

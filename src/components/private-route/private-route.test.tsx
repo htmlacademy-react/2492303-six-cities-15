@@ -6,6 +6,8 @@ import PrivateRoute from './private-route';
 import { render, screen } from '@testing-library/react';
 
 describe('Component: PrivateRoute', () => {
+  const publicRoute = 'public route';
+  const privateRoute = 'private route';
   let mockHistory: MemoryHistory;
 
   beforeAll(() => {
@@ -17,14 +19,12 @@ describe('Component: PrivateRoute', () => {
   });
 
   it('should render component for public route, when user not authorized', () => {
-    const expectedText = 'public route';
-    const notExpectedText = 'private route';
     const preparedComponent = withHistory(
       <Routes>
-        <Route path={AppRoute.Login} element={<span>{expectedText}</span>} />
+        <Route path={AppRoute.Login} element={<span>{publicRoute}</span>} />
         <Route path={AppRoute.Favorites} element={
           <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
-            <span>{notExpectedText}</span>
+            <span>{privateRoute}</span>
           </PrivateRoute>
         }
         />
@@ -34,19 +34,17 @@ describe('Component: PrivateRoute', () => {
 
     render(preparedComponent);
 
-    expect(screen.getByText(expectedText)).toBeInTheDocument();
-    expect(screen.queryByText(notExpectedText)).not.toBeInTheDocument();
+    expect(screen.getByText(publicRoute)).toBeInTheDocument();
+    expect(screen.queryByText(privateRoute)).not.toBeInTheDocument();
   });
 
   it('should render component for private route, when user authorized', () => {
-    const expectedText = 'private route';
-    const notExpectedText = 'public route';
     const preparedComponent = withHistory(
       <Routes>
-        <Route path={AppRoute.Login} element={<span>{notExpectedText}</span>} />
+        <Route path={AppRoute.Login} element={<span>{publicRoute}</span>} />
         <Route path={AppRoute.Favorites} element={
           <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-            <span>{expectedText}</span>
+            <span>{privateRoute}</span>
           </PrivateRoute>
         }
         />
@@ -56,7 +54,7 @@ describe('Component: PrivateRoute', () => {
 
     render(preparedComponent);
 
-    expect(screen.getByText(expectedText)).toBeInTheDocument();
-    expect(screen.queryByText(notExpectedText)).not.toBeInTheDocument();
+    expect(screen.getByText(privateRoute)).toBeInTheDocument();
+    expect(screen.queryByText(publicRoute)).not.toBeInTheDocument();
   });
 });

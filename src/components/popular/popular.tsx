@@ -19,36 +19,35 @@ export const Popular: FC<TPopularPageProps> = ({setTypeS}) => {
           <use xlinkHref="#icon-arrow-select" />
         </svg>
       </span>
-      {(hover) &&
-        <ul className="places__options places__options--custom places__options--opened">
-          <li
-            className="places__option places__option--active"
-            tabIndex={0}
-            onClick={() => {
-              setTypeS('popular');setHover(false);{setFilter('Popular');}
-            }}
-          >
-          Popular
-          </li>
-          <li className="places__option" tabIndex={0} onClick={() => {
-            setTypeS('low');setHover(false);setFilter('Price: low to high');
+      <ul style ={{display: hover ? 'block' : 'none'}} className="places__options places__options--custom places__options--opened">
+        <li
+          className="places__option places__option--active"
+          tabIndex={0}
+          onClick={() => {
+            setTypeS('popular');setHover(false);{setFilter('Popular');}
           }}
-          >
-          Price: low to high
-          </li>
-          <li className="places__option" tabIndex={0} onClick={() => {
-            setTypeS('height');setHover(false);setFilter('Price: high to low');
-          }}
-          >
-          Price: high to low
-          </li>
-          <li className="places__option" tabIndex={0} onClick={() => {
-            setTypeS('rated');setHover(false);setFilter('Top rated first');
-          }}
-          >
-          Top rated first
-          </li>
-        </ul>}
+        >
+        Popular
+        </li>
+        <li className="places__option" tabIndex={0} onClick={() => {
+          setTypeS('low');setHover(false);setFilter('Price: low to high');
+        }}
+        >
+        Price: low to high
+        </li>
+        <li className="places__option" tabIndex={0} onClick={() => {
+          setTypeS('height');setHover(false);setFilter('Price: high to low');
+        }}
+        >
+        Price: high to low
+        </li>
+        <li className="places__option" tabIndex={0} onClick={() => {
+          setTypeS('rated');setHover(false);setFilter('Top rated first');
+        }}
+        >
+        Top rated first
+        </li>
+      </ul>
     </form>
   );
 };

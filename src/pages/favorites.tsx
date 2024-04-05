@@ -59,7 +59,7 @@ export const Favorites: FC = () => {
       <main className='page__main page__main--favorites'>
         <div className='page__favorites-container container'>
           {
-            favorite?.length === 0 &&
+            (!favorite || favorite?.length === 0) &&
             <section className="favorites favorites--empty">
               <h1 className = "visually-hidden">Favorites (empty)</h1>
               <div className="favorites__status-wrapper">

@@ -4,7 +4,6 @@ import OffersData from '../../mocks/offers';
 import { getDataLoadingStatus, getErrorStatus, getOffers } from './selectors';
 
 describe('Offers selectors', () => {
-//  const mockOffers = makeFakeOffers();
   const state = {
     [NameSpace.Data]: {
       offers: OffersData,

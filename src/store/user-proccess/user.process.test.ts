@@ -3,11 +3,19 @@ import { checkAuthAction, loginAction, logoutAction } from '../api-actions';
 import { userProcess } from './user-process';
 
 describe('UserProcess Slice', () => {
-  it('should return initial state with empty action', () => {
-    const emptyAction = { type: '' };
-    const expectedState = { authorizationStatus: AuthorizationStatus.Auth };
+  const AuthStatus = AuthorizationStatus.Auth;
+  const NoAuthStatus = AuthorizationStatus.NoAuth;
+  const getPreparedData = (initialValue: AuthorizationStatus, expectedValue: AuthorizationStatus) => ([
+    { authorizationStatus: initialValue },
+    { authorizationStatus: expectedValue },
+  ]);
 
-    const result = userProcess.reducer(expectedState, emptyAction);
+  it('should return initial state with empty action', () => {
+    const [, expectedState] = getPreparedData(NoAuthStatus, AuthStatus);
+
+    const emptyAction = { type: '' };
+
+    const result = userProcess.reducer({authorizationStatus:AuthStatus}, emptyAction);
 
     expect(result).toEqual(expectedState);
   });
@@ -22,8 +30,7 @@ describe('UserProcess Slice', () => {
   });
 
   it('should set "Auth" with "checkAuthAction.fulfilled" action', () => {
-    const initialState = { authorizationStatus: AuthorizationStatus.NoAuth };
-    const expectedState = { authorizationStatus: AuthorizationStatus.Auth };
+    const [initialState, expectedState] = getPreparedData(NoAuthStatus, AuthStatus);
 
     const result = userProcess.reducer(initialState, checkAuthAction.fulfilled);
 
@@ -31,8 +38,7 @@ describe('UserProcess Slice', () => {
   });
 
   it('should set "NoAuth" with "checkAuthAction.rejected" action', () => {
-    const initialState = { authorizationStatus: AuthorizationStatus.Auth };
-    const expectedState = { authorizationStatus: AuthorizationStatus.NoAuth };
+    const [initialState, expectedState] = getPreparedData(AuthStatus, NoAuthStatus);
 
     const result = userProcess.reducer(initialState, checkAuthAction.rejected);
 
@@ -40,8 +46,7 @@ describe('UserProcess Slice', () => {
   });
 
   it('should set "Auth" with "loginAction.fulfilled" action', () => {
-    const initialState = { authorizationStatus: AuthorizationStatus.NoAuth };
-    const expectedState = { authorizationStatus: AuthorizationStatus.Auth };
+    const [initialState, expectedState] = getPreparedData(NoAuthStatus, AuthStatus);
 
     const result = userProcess.reducer(initialState, loginAction.fulfilled);
 
@@ -49,8 +54,7 @@ describe('UserProcess Slice', () => {
   });
 
   it('should set "NoAuth" with "loginAction.rejected" action', () => {
-    const initialState = { authorizationStatus: AuthorizationStatus.Auth };
-    const expectedState = { authorizationStatus: AuthorizationStatus.NoAuth };
+    const [initialState, expectedState] = getPreparedData(AuthStatus, NoAuthStatus);
 
     const result = userProcess.reducer(initialState, loginAction.rejected);
 
@@ -58,8 +62,7 @@ describe('UserProcess Slice', () => {
   });
 
   it('should set "NoAuth", with "logoutAction.fulfilled" action', () => {
-    const initialState = { authorizationStatus: AuthorizationStatus.Auth };
-    const expectedState = { authorizationStatus: AuthorizationStatus.NoAuth };
+    const [initialState, expectedState] = getPreparedData(AuthStatus, NoAuthStatus);
 
     const result = userProcess.reducer(initialState, logoutAction.fulfilled);
 

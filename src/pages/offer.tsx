@@ -38,6 +38,7 @@ function Offer(): JSX.Element {
   const handleClick = () => {
     if (authorizationStatus === AuthorizationStatus.NoAuth){
       navigate(AppRoute.Login);
+      return;
     }
     dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
   };

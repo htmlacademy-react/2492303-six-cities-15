@@ -84,7 +84,7 @@ export const MainPage: FC = () => {
               <nav className="header__nav">
                 <ul className="header__nav-list">
                   <li className="header__nav-item user">
-                    <Link to={AppRoute.Login} className="header__nav-link header__nav-link--profile">
+                    <Link to={AppRoute.Login} className="header__login">
                       Sign in
                     </Link>
                   </li>
@@ -99,9 +99,9 @@ export const MainPage: FC = () => {
           <section className="locations container">
             <ul className="locations__list tabs__list" >
               {City.map((item) => (
-                <div key={item.id} onClick={() => handleClick(item)}>
+                <li className="locations__item" key={item.id} onClick={() => handleClick(item)}>
                   <CityList key={item.id} title={item.name}/>
-                </div>
+                </li>
               ))}
             </ul>
           </section>
@@ -112,13 +112,13 @@ export const MainPage: FC = () => {
             <section className="cities__places places">
               {isOfferLoading && <MoonLoader/>}
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} places to stay in {activeCity.name}</b>
+              <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} {offersFilter.length === 1 ? 'place' : 'places' } to stay in {activeCity.name}</b>
               <Popular setTypeS={setTypeS}/>
               <OfferList offers={SortOffer(offersFilter,typeS)} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map activeCity={activeCity} points={offers.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                <Map activeCity={activeCity} points={offersFilter.map((item)=> item.location)} selectedPoint={selectedPoint} />
               </section>
             </div>
           </div>
