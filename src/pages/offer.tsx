@@ -8,13 +8,13 @@ import { useAppDispatch, useAppSelector } from '../components/hooks';
 import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../store/api-actions';
 import { NotFoundScreen } from './not-found-screen';
 import { OfferList } from '../components/offer-list/offer-list';
-import { City } from '../mocks/city';
+import { cities } from '../mocks/city';
 
 function Offer(): JSX.Element {
   const params = useParams();
   const dispatch = useAppDispatch();
   const offer = useAppSelector((state) => state.DATA.offer);
-  const favorite = useAppSelector((state) => state.DATA.favorite);
+  const favorite = useAppSelector((state) => state.DATA.favorites);
   useEffect (() => {
     dispatch(fetchOfferAction(String(params?.id)));
     dispatch(fetchFavoriteAction(''));
@@ -203,7 +203,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offers={offersMap.slice(0,3)} city={offer?.city || City[0]}/>
+              <OfferList offers={offersMap.slice(0,3)} city={offer?.city || cities[0]}/>
             </div>
           </section>
         </div>

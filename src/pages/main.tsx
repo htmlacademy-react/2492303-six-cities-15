@@ -3,7 +3,7 @@ import { OfferList } from '../components/offer-list/offer-list';
 import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
 import Map from '../components/map/map.tsx';
 import { CityList } from '../components/city/city_list.tsx';
-import { City } from '../mocks/city.ts';
+import { cities } from '../mocks/city.ts';
 import { Popular } from '../components/popular/popular.tsx';
 import SortOffer from '../components/popular/sort-offer.ts';
 import { useAppDispatch, useAppSelector } from '../components/hooks/index.ts';
@@ -32,7 +32,7 @@ export const MainPage: FC = () => {
     dispatch(updateCity(city));
   };
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
-  const favorite = useAppSelector((state) => state.DATA.favorite);
+  const favorite = useAppSelector((state) => state.DATA.favorites);
   return (
     <div className="page page--gray page--main" data-testid="main-page">
       <header className="header">
@@ -98,7 +98,7 @@ export const MainPage: FC = () => {
         <div className="tabs">
           <section className="locations container">
             <ul className="locations__list tabs__list" >
-              {City.map((item) => (
+              {cities.map((item) => (
                 <li className="locations__item" key={item.id} onClick={() => handleClick(item)}>
                   <CityList key={item.id} title={item.name}/>
                 </li>

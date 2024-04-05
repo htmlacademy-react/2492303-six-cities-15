@@ -1,6 +1,6 @@
 import { TCity } from '../const';
 
-export const City: TCity[] = [
+export const cities: TCity[] = [
   {
     id: 1,
     name: 'Paris',

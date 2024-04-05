@@ -1,5 +1,5 @@
 import { NameSpace } from '../../const';
-import { City } from '../../mocks/city';
+import { cities } from '../../mocks/city';
 import OffersData from '../../mocks/offers';
 import { getDataLoadingStatus, getErrorStatus, getOffers } from './selectors';
 
@@ -8,10 +8,10 @@ describe('Offers selectors', () => {
     [NameSpace.Data]: {
       offers: OffersData,
       offersNear: [],
-      city: City[0],
+      city: cities[0],
       isOfferLoading: false,
       hasError: false,
-      favorite: []
+      favorites: []
     }
   };
 

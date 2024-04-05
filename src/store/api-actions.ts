@@ -1,7 +1,7 @@
 import {AxiosInstance} from 'axios';
 import {createAsyncThunk} from '@reduxjs/toolkit';
 import {AppDispatch, State} from '../types/state.js';
-import {APIRoute, AppRoute, TAddComment, TAddFavorite, TComments, TOffer, TOfferId} from '../const';
+import {APIRoute, AppRoute, TAddComment, TAddFavorite, TComments, TOffer, TOfferFull} from '../const';
 import { AuthData } from '../types/auth-data.js';
 import { UserData } from '../types/user-data.js';
 import { dropToken, saveToken } from '../services/token.js';
@@ -19,14 +19,14 @@ export const fetchOffersAction = createAsyncThunk<TOffer[], undefined, {
   },
 );
 
-export const fetchOfferAction = createAsyncThunk<TOfferId, string, {
+export const fetchOfferAction = createAsyncThunk<TOfferFull, string, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'offerId',
   async (offerId, {extra: api}) => {
-    const {data} = await api.get<TOfferId>(APIRoute.Offer + String(offerId));
+    const {data} = await api.get<TOfferFull>(APIRoute.Offer + String(offerId));
     return data;
   },
 );
@@ -122,14 +122,14 @@ export const AddCommentAction = createAsyncThunk<void, TAddComment, {
   },
 );
 
-export const AddFavoriteAction = createAsyncThunk<TOfferId, TAddFavorite, {
+export const AddFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'addFavorite',
   async ({status, offerId}, {dispatch, extra: api}) => {
-    const {data} = await api.post<TOfferId>(`${APIRoute.Favorites + offerId }/${status}`);
+    const {data} = await api.post<TOfferFull>(`${APIRoute.Favorites + offerId }/${status}`);
     if (offerId){
       dispatch(fetchFavoriteAction(offerId));
       dispatch(fetchOfferAction(offerId));

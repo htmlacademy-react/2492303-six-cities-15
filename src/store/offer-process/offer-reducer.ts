@@ -1,5 +1,5 @@
-import { TOffer, TOfferId, TCity, TComments, NameSpace } from '../../const';
-import { City } from '../../mocks/city';
+import { TOffer, TOfferFull, TCity, TComments, NameSpace } from '../../const';
+import { cities } from '../../mocks/city';
 import { insertOffer, updateCity } from '../action';
 import { createSlice} from '@reduxjs/toolkit';
 import { fetchOffersAction, fetchOfferAction, fetchOfferNearAction, fetchOfferCommentsAction, AddCommentAction, fetchFavoriteAction, AddFavoriteAction } from '../api-actions';
@@ -7,23 +7,23 @@ import { fetchOffersAction, fetchOfferAction, fetchOfferNearAction, fetchOfferCo
 export type InitialState = {
   offers: TOffer[];
   offersNear: TOffer[];
-  offer?: TOfferId;
+  offer?: TOfferFull;
   city: TCity;
   isOfferLoading: boolean;
   hasError: boolean;
   comments?: TComments[];
-  favorite: TOffer[];
+  favorites: TOffer[];
   loadingStatus?: 'rejected'|'fulfilled'|'pending';
 }
 
 const initialState: InitialState = {
   offers: [],
   offersNear: [],
-  city: City[0],
+  city: cities[0],
   isOfferLoading: false,
   hasError: false,
   loadingStatus:'fulfilled',
-  favorite:[]
+  favorites:[]
 };
 
 export const OfferData = createSlice({
@@ -70,7 +70,7 @@ export const OfferData = createSlice({
         state.hasError = false;
       })
       .addCase(fetchFavoriteAction.fulfilled, (state, action) => {
-        state.favorite = action.payload;
+        state.favorites = action.payload;
       })
       .addCase(AddFavoriteAction.fulfilled, (state, action) => {
         state.hasError = false;

@@ -18,7 +18,7 @@ export type TOffer = {
   rating: number;
 }
 
-export type TOfferId = TOffer & {
+export type TOfferFull = TOffer & {
   description: string;
   images: string[];
   goods: string[];
