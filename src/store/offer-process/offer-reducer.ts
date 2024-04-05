@@ -12,7 +12,7 @@ export type InitialState = {
   isOfferLoading: boolean;
   hasError: boolean;
   comments?: TComments[];
-  favorite?: TOffer[];
+  favorite: TOffer[];
   loadingStatus?: 'rejected'|'fulfilled'|'pending';
 }
 
@@ -22,7 +22,8 @@ const initialState: InitialState = {
   city: City[0],
   isOfferLoading: false,
   hasError: false,
-  loadingStatus:'fulfilled'
+  loadingStatus:'fulfilled',
+  favorite:[]
 };
 
 export const OfferData = createSlice({

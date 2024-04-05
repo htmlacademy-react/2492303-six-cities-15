@@ -116,7 +116,7 @@ function Offer(): JSX.Element {
           <div className='offer__container container'>
             <div className='offer__wrapper'>
               <div className='offer__mark'>
-                <span>{offer?.isPremium ? 'Premium' : 'Single'}</span>
+                {offer?.isPremium && <span className='offer__mark'>Premium</span>}
               </div>
               <div className='offer__name-wrapper'>
                 <h1 className='offer__name'>

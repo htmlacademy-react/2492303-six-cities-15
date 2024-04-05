@@ -10,7 +10,8 @@ describe('Offers selectors', () => {
       offersNear: [],
       city: City[0],
       isOfferLoading: false,
-      hasError: false
+      hasError: false,
+      favorite: []
     }
   };
 

@@ -118,7 +118,9 @@ export const MainPage: FC = () => {
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map activeCity={activeCity} points={offersFilter.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                {
+                  offersFilter.length > 0 && <Map activeCity={activeCity} points={offersFilter.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                }
               </section>
             </div>
           </div>
@@ -130,7 +132,7 @@ export const MainPage: FC = () => {
               <div className='cities__status-wrapper tabs__content'>
                 <b className='cities__status'>No places to stay available</b>
                 <p className='cities__status-description'>
-                  We could not find any property available at the moment in
+                  We could not find any property available at the moment in{' '}
                   {activeCity.name}
                 </p>
               </div>
