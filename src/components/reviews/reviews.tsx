@@ -3,12 +3,13 @@ import { ReviewsList } from './reviews_list';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchOfferCommentsAction } from '../../store/api-actions';
+import { makeSortedReviews } from '../../store/offer-process/selectors';
 
 
 export const Reviews: FC = () => {
   const params = useParams();
   const dispatch = useAppDispatch();
-  const reviewsData = useAppSelector((state) => state.DATA.comments);
+  const reviewsData = useAppSelector(makeSortedReviews);
 
   useEffect (() => {
     if (params.id) {

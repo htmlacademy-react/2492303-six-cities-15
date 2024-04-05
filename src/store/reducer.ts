@@ -71,6 +71,9 @@ export const reducer = createReducer(initialState, (builder) => {
     .addCase(AddCommentAction.fulfilled, (state) => {
       state.hasError = false;
     })
+    .addCase(fetchFavoriteAction.pending, (state, action) => {
+      state.favorite = action.payload;
+    })
     .addCase(fetchFavoriteAction.fulfilled, (state, action) => {
       state.favorite = action.payload;
     })

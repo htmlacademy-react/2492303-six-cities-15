@@ -1,7 +1,8 @@
 import { ChangeEvent, FC, Fragment, useState } from 'react';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { AddCommentAction } from '../../store/api-actions';
 import { FormEvent } from 'react';
+import { getDataLoadingStatus } from '../../store/offer-process/selectors';
 
 export type TFormReviewrops = {
   offerId?: string;
@@ -12,7 +13,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
     rating: -1,
     comment: ''
   });
-
+  const loadingStatus = useAppSelector(getDataLoadingStatus);
   const dispatch = useAppDispatch();
   const handleFieldChange = (event:ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target;
@@ -69,6 +70,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         placeholder='Tell how was your stay, what you like and what can be improved'
         onChange={handleCommentChange}
         value={formData.comment}
+        disabled={loadingStatus}
       />
       <div className='reviews__button-wrapper'>
         <p className='reviews__help'>
@@ -80,7 +82,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         <button
           className='reviews__submit form__submit button'
           type='submit'
-          disabled={formData.rating < 1 || formData.comment.length < 50 }
+          disabled={formData.rating < 1 || formData.comment.length < 50 || formData.comment.length > 300 }
         >
           Submit
         </button>

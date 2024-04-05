@@ -9,7 +9,7 @@ export type TReviewDataProps = {
 
 export const ReviewsList: FC<TReviewDataProps> = ({ReviewsData}) => (
   <ul className='reviews__list'>
-    {ReviewsData && ReviewsData.map((item) => (
+    {ReviewsData && ReviewsData.slice(0,10).map((item) => (
       <li key={item.id} className='reviews__item'>
         <div className='reviews__user user'>
           <ReviewUser key={item.id} name={item.user.name} img={item.user.avatarUrl}/>

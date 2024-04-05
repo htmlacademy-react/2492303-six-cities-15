@@ -1,12 +1,11 @@
-import {Link, useParams} from 'react-router-dom';
-import { AppRoute, AuthorizationStatus} from '../const';
+import {Link, useNavigate, useParams} from 'react-router-dom';
+import { AppRoute, AuthorizationStatus, TOffer} from '../const';
 import { FormReview } from '../components/form-review/form-review';
 import { Reviews } from '../components/reviews/reviews';
 import Map from '../components/map/map';
-//import { OfferList } from '../components/offer-list/offer-list';
 import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../components/hooks';
-import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction } from '../store/api-actions';
+import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../store/api-actions';
 import { NotFoundScreen } from './not-found-screen';
 import { OfferList } from '../components/offer-list/offer-list';
 import { City } from '../mocks/city';
@@ -25,11 +24,23 @@ function Offer(): JSX.Element {
   const OffersNear = useAppSelector((state) => state.DATA.offersNear);
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
   const hasError = useAppSelector(((state) => state.DATA.hasError));
+  const user = useAppSelector((state) => state.USER.User);
+  const navigate = useNavigate();
   if (hasError) {
     return (
       <NotFoundScreen />
     );
   }
+  const offersMap: TOffer[] = [...OffersNear.slice(0,3)];
+  if(offer){
+    offersMap.push(offer);
+  }
+  const handleClick = () => {
+    if (authorizationStatus === AuthorizationStatus.NoAuth){
+      navigate(AppRoute.Login);
+    }
+    dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
+  };
   return (
     <div className='page'>
       <header className='header'>
@@ -46,6 +57,7 @@ function Offer(): JSX.Element {
                 />
               </Link>
             </div>
+            {authorizationStatus === AuthorizationStatus.Auth &&
             <nav className='header__nav'>
               <ul className='header__nav-list'>
                 <li className='header__nav-item user'>
@@ -55,18 +67,33 @@ function Offer(): JSX.Element {
                   >
                     <div className='header__avatar-wrapper user__avatar-wrapper'></div>
                     <span className='header__user-name user__name'>
-                      Oliver.conner@gmail.com
+                      {user?.email}
                     </span>
                     <span className='header__favorite-count'>{favorite?.length}</span>
                   </Link>
                 </li>
-                <li className='header__nav-item'>
-                  <a className='header__nav-link' href='#'>
-                    <span className='header__signout'>Sign out</span>
-                  </a>
+                <li className="header__nav-item">
+                  <Link to={AppRoute.Main} className="header__nav-link" >
+                    <span className="header__signout" onClick={() => {
+                      dispatch(logoutAction());
+                    }}
+                    >
+                          Sign out
+                    </span>
+                  </Link>
                 </li>
               </ul>
-            </nav>
+            </nav>}
+            {authorizationStatus === AuthorizationStatus.NoAuth &&
+              <nav className="header__nav">
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <Link to={AppRoute.Login} className="header__nav-link header__nav-link--profile">
+                      Sign in
+                    </Link>
+                  </li>
+                </ul>
+              </nav>}
           </div>
         </div>
       </header>
@@ -96,7 +123,7 @@ function Offer(): JSX.Element {
                 </h1>
                 <button className= {`offer__bookmark-button button  ${offer?.isFavorite ? 'offer__bookmark-button--active button' : ''}`}
                   onClick = {() => {
-                    dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
+                    handleClick();
                   }}
                 >
                   <svg className='offer__bookmark-icon' width={31} height={33}>
@@ -107,7 +134,7 @@ function Offer(): JSX.Element {
               </div>
               <div className='offer__rating rating'>
                 <div className='offer__stars rating__stars'>
-                  <span style={{ width: '80%' }} />
+                  <span style={{ width: `${Math.round(Number(offer?.rating)) * 20 }%`}} />
                   <span className='visually-hidden'>Rating </span>
                 </div>
                 <span className='offer__rating-value rating__value'>{offer?.rating}</span>
@@ -117,10 +144,10 @@ function Offer(): JSX.Element {
                   {offer?.type}
                 </li>
                 <li className='offer__feature offer__feature--bedrooms'>
-                  {offer?.bedrooms} Bedrooms
+                  {offer?.bedrooms}{offer?.bedrooms === 1 ? ' Bedroom' : ' Bedrooms'}
                 </li>
                 <li className='offer__feature offer__feature--adults'>
-                  Max {offer?.maxAdults} adults
+                  Max {offer?.maxAdults} {offer?.maxAdults === 1 ? ' adult' : ' adults'}
                 </li>
               </ul>
               <div className='offer__price'>
@@ -166,7 +193,7 @@ function Offer(): JSX.Element {
             </div>
           </div>
           <section className='offer__map map'>
-            <Map activeCity={activeCity} points={OffersNear.map((item)=> item.location).slice(0,3)} selectedPoint={null} />
+            <Map activeCity={activeCity} points={offersMap.map((item)=> item.location)} selectedPoint={offer?.location || null} />
           </section>
         </section>
         <div className='container'>
@@ -175,7 +202,7 @@ function Offer(): JSX.Element {
               Other places in the neighbourhood
             </h2>
             <div className='near-places__list places__list'>
-              <OfferList offers={OffersNear.slice(0,3)} cardAmount={3} city={offer?.city || City[0]}/>
+              <OfferList offers={offersMap.slice(0,3)} city={offer?.city || City[0]}/>
             </div>
           </section>
         </div>

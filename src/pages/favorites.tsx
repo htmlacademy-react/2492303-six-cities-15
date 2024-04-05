@@ -5,9 +5,9 @@ import { fetchFavoriteAction, logoutAction } from '../store/api-actions';
 import { AppRoute } from '../const';
 import { Link } from 'react-router-dom';
 
-
 export const Favorites: FC = () => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.USER.User);
   useEffect (() => {
     dispatch(fetchFavoriteAction(''));
   },[dispatch]);
@@ -36,7 +36,7 @@ export const Favorites: FC = () => {
                   >
                     <div className='header__avatar-wrapper user__avatar-wrapper'></div>
                     <span className='header__user-name user__name'>
-                    Oliver.conner@gmail.com
+                      {user?.email}
                     </span>
                     <span className='header__favorite-count'>{favorite?.length}</span>
                   </Link>
@@ -58,6 +58,17 @@ export const Favorites: FC = () => {
       </header>
       <main className='page__main page__main--favorites'>
         <div className='page__favorites-container container'>
+          {
+            favorite?.length === 0 &&
+            <section className="favorites favorites--empty">
+              <h1 className = "visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">Save properties to narrow down search or plan your future trips.</p>
+              </div>
+            </section>
+          }
+          {favorite && favorite?.length > 0 &&
           <section className='favorites'>
             <h1 className='favorites__title'>Saved listing</h1>
             <ul className='favorites__list'>
@@ -76,7 +87,7 @@ export const Favorites: FC = () => {
                 )
               ))}
             </ul>
-          </section>
+          </section>}
         </div>
       </main>
       <footer className='footer container'>

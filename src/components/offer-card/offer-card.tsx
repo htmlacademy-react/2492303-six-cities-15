@@ -1,8 +1,8 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AppRoute, TOffer } from '../../const';
+import { AppRoute, AuthorizationStatus, TOffer } from '../../const';
 import { AddFavoriteAction } from '../../store/api-actions';
-import { useAppDispatch } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { memo } from 'react';
 
 export type TOfferCardPageProps = {
@@ -23,11 +23,17 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
       handlerHover();
     }
   };
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
   const handleClick = (event: { stopPropagation: () => void}) => {
+    if (authorizationStatus === AuthorizationStatus.NoAuth){
+      navigate(AppRoute.Login);
+    }
     event.stopPropagation();
     dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
   };
-  const navigate = useNavigate();
+
   return(
     <div onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}
       onMouseOver={handleMouseOver}
@@ -74,7 +80,7 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
           </div>
           <div className="place-card__rating rating">
             <div className="place-card__stars rating__stars">
-              <span style={{ width: offer?.rating * 20}} />s
+              <span style={{ width: `${Math.round(offer?.rating) * 20 }%`}} />
               <span className="visually-hidden">{offer?.rating}</span>
             </div>
           </div>

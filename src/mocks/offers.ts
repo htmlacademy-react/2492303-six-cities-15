@@ -1,10 +1,9 @@
-import { TOffer } from "../const";
+import { TOffer } from '../const';
 
 const OffersData: TOffer[] = [
   {
     id: '1',
     title: 'Best room',
-    description: 'desc',
     type: 'Room',
     price: 20,
     previewImage: '1.png',
@@ -26,9 +25,8 @@ const OffersData: TOffer[] = [
     rating: 100
   },
   {
-    id: 21,
+    id: '21',
     title: 'Best 333',
-    description: 'desc',
     type: 'Room',
     price: 20,
     previewImage: '1.png',

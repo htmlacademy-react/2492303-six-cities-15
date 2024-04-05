@@ -13,6 +13,7 @@ export type InitialState = {
   hasError: boolean;
   comments?: TComments[];
   favorite?: TOffer[];
+  loadingStatus?: 'rejected'|'fulfilled'|'pending';
 }
 
 const initialState: InitialState = {
@@ -20,7 +21,8 @@ const initialState: InitialState = {
   offersNear: [],
   city: City[0],
   isOfferLoading: false,
-  hasError: false
+  hasError: false,
+  loadingStatus:'fulfilled'
 };
 
 export const OfferData = createSlice({
@@ -52,7 +54,15 @@ export const OfferData = createSlice({
       .addCase(fetchOfferNearAction.fulfilled, (state, action) => {
         state.offersNear = action.payload;
       })
+      .addCase(fetchOfferCommentsAction.rejected, (state) => {
+        state.loadingStatus = 'rejected';
+      })
+      .addCase(fetchOfferCommentsAction.pending, (state, action) => {
+        state.loadingStatus = 'pending';
+        state.comments = action.payload;
+      })
       .addCase(fetchOfferCommentsAction.fulfilled, (state, action) => {
+        state.loadingStatus = 'fulfilled';
         state.comments = action.payload;
       })
       .addCase(AddCommentAction.fulfilled, (state) => {
@@ -63,8 +73,8 @@ export const OfferData = createSlice({
       })
       .addCase(AddFavoriteAction.fulfilled, (state, action) => {
         state.hasError = false;
-        const index = state.offersNear.findIndex((item) => item.id === action.payload.id);
-        if (index) {
+        const index = state.offersNear?.findIndex((item) => item.id === action.payload.id);
+        if (index > -1) {
           state.offersNear[index].isFavorite = action.payload.isFavorite;
         }
 
