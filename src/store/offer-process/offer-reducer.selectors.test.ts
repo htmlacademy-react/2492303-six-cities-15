@@ -9,6 +9,7 @@ describe('Offers selectors', () => {
       offers: OffersData,
       offersNear: [],
       city: cities[0],
+      isOffersLoading: false,
       isOfferLoading: false,
       hasError: false,
       favorites: []
@@ -16,9 +17,9 @@ describe('Offers selectors', () => {
   };
 
   it('should return offers data loading status', () => {
-    const { isOfferLoading } = state[NameSpace.Data];
+    const { isOffersLoading } = state[NameSpace.Data];
     const result = getDataLoadingStatus(state);
-    expect(result).toBe(isOfferLoading);
+    expect(result).toBe(isOffersLoading);
   });
 
   it('should return offers from state', () => {

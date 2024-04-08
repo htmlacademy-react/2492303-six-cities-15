@@ -26,7 +26,7 @@ export const MainPage: FC = () => {
     }, []
   );
   const activeCity = useAppSelector((state) => state.DATA.city);
-  const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
+  const isOffersLoading = useAppSelector((state) => state.DATA.isOffersLoading);
   const dispatch = useAppDispatch();
   const handleClick = (city: TCity) => {
     dispatch(updateCity(city));
@@ -106,11 +106,11 @@ export const MainPage: FC = () => {
             </ul>
           </section>
         </div>
+        {isOffersLoading && <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}><MoonLoader /></div>}
         {offers.length > 0 &&
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
-              {isOfferLoading && <MoonLoader/>}
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} {offersFilter.length === 1 ? 'place' : 'places' } to stay in {activeCity.name}</b>
               <Popular setTypeS={setTypeS}/>
@@ -125,7 +125,7 @@ export const MainPage: FC = () => {
             </div>
           </div>
         </div>}
-        {offers.length === 0 &&
+        {!isOffersLoading && offers.length === 0 &&
         <div className="cities">
           <div className='cities__places-container cities__places-container--empty container'>
             <section className='cities__no-places'>

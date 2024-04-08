@@ -9,6 +9,7 @@ export type InitialState = {
   offersNear: TOffer[];
   offer?: TOfferFull;
   city: TCity;
+  isOffersLoading: boolean;
   isOfferLoading: boolean;
   hasError: boolean;
   comments?: TComments[];
@@ -20,6 +21,7 @@ const initialState: InitialState = {
   offers: [],
   offersNear: [],
   city: cities[0],
+  isOffersLoading: false,
   isOfferLoading: false,
   hasError: false,
   loadingStatus:'fulfilled',
@@ -39,18 +41,23 @@ export const OfferData = createSlice({
         state.city = action.payload;
       })
       .addCase(fetchOffersAction.pending, (state) => {
-        state.isOfferLoading = true;
+        state.isOffersLoading = true;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
         state.offers = action.payload;
-        state.isOfferLoading = false;
+        state.isOffersLoading = false;
       })
       .addCase(fetchOfferAction.fulfilled, (state, action) => {
         state.offer = action.payload;
         state.hasError = false;
+        state.isOfferLoading = false;
       })
       .addCase(fetchOfferAction.rejected, (state) => {
         state.hasError = true;
+      })
+      .addCase(fetchOfferAction.pending, (state) => {
+        state.hasError = false;
+        state.isOfferLoading = true;
       })
       .addCase(fetchOfferNearAction.fulfilled, (state, action) => {
         state.offersNear = action.payload;
@@ -77,6 +84,10 @@ export const OfferData = createSlice({
         const index = state.offersNear?.findIndex((item) => item.id === action.payload.id);
         if (index > -1) {
           state.offersNear[index].isFavorite = action.payload.isFavorite;
+        }
+
+        if (state.offer && state.offer.id === action.payload.id){
+          state.offer.isFavorite = action.payload.isFavorite;
         }
 
       });

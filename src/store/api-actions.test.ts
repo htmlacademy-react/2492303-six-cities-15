@@ -96,6 +96,7 @@ describe('Async actions', () => {
         loginAction.pending.type,
         redirectToRoute.type,
         fetchFavoriteAction.pending.type,
+        fetchOffersAction.pending.type,
         loginAction.fulfilled.type,
       ]);
     });
@@ -124,6 +125,7 @@ describe('Async actions', () => {
       expect(actions).toEqual([
         logoutAction.pending.type,
         fetchFavoriteAction.pending.type,
+        fetchOffersAction.pending.type,
         logoutAction.fulfilled.type,
       ]);
     });

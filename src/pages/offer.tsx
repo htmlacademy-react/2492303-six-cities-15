@@ -9,6 +9,7 @@ import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNea
 import { NotFoundScreen } from './not-found-screen';
 import { OfferList } from '../components/offer-list/offer-list';
 import { cities } from '../mocks/city';
+import { MoonLoader } from 'react-spinners';
 
 function Offer(): JSX.Element {
   const params = useParams();
@@ -25,6 +26,7 @@ function Offer(): JSX.Element {
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
   const hasError = useAppSelector(((state) => state.DATA.hasError));
   const user = useAppSelector((state) => state.USER.User);
+  const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
   const navigate = useNavigate();
   if (hasError) {
     return (
@@ -64,7 +66,7 @@ function Offer(): JSX.Element {
                 <li className='header__nav-item user'>
                   <Link
                     className='header__nav-link header__nav-link--profile'
-                    to = {AppRoute.Main}
+                    to = {AppRoute.Favorites}
                   >
                     <div className='header__avatar-wrapper user__avatar-wrapper'></div>
                     <span className='header__user-name user__name'>
@@ -74,7 +76,7 @@ function Offer(): JSX.Element {
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <Link to={AppRoute.Main} className="header__nav-link" >
+                  <Link className="header__nav-link" to={''} >
                     <span className="header__signout" onClick={() => {
                       dispatch(logoutAction());
                     }}
@@ -98,6 +100,7 @@ function Offer(): JSX.Element {
           </div>
         </div>
       </header>
+      {isOfferLoading && <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}> <MoonLoader /></div>}
       <main className='page__main page__main--offer'>
         <section className='offer'>
           <div className='offer__gallery-container container'>
@@ -115,9 +118,10 @@ function Offer(): JSX.Element {
           </div>
           <div className='offer__container container'>
             <div className='offer__wrapper'>
+              {offer?.isPremium &&
               <div className='offer__mark'>
-                {offer?.isPremium && <span className='offer__mark'>Premium</span>}
-              </div>
+                <span className='offer__mark'>Premium</span>
+              </div>}
               <div className='offer__name-wrapper'>
                 <h1 className='offer__name'>
                   {offer?.title}
@@ -148,7 +152,7 @@ function Offer(): JSX.Element {
                   {offer?.bedrooms}{offer?.bedrooms === 1 ? ' Bedroom' : ' Bedrooms'}
                 </li>
                 <li className='offer__feature offer__feature--adults'>
-                  Max {offer?.maxAdults} {offer?.maxAdults === 1 ? ' adult' : ' adults'}
+                  Max {offer?.maxAdults} {offer?.maxAdults === 1 ? 'adult' : ' adults'}
                 </li>
               </ul>
               <div className='offer__price'>
@@ -176,7 +180,6 @@ function Offer(): JSX.Element {
                     />
                   </div>
                   <span className='offer__user-name'>{offer?.host?.name}</span>
-                  <span className='offer__user-status'>{offer?.host?.isPro ? 'Pro' : ''}</span>
                 </div>
                 <div className='offer__description'>
                   <p className='offer__text'>

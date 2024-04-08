@@ -1,7 +1,8 @@
 import { FC } from 'react';
-import { TOffer } from '../../const';
+import { AppRoute, TOffer } from '../../const';
 import { useAppDispatch } from '../hooks';
 import { AddFavoriteAction } from '../../store/api-actions';
+import { Link } from 'react-router-dom';
 
 export type TOfferCardPageProps = {
   favoritesData: TOffer;
@@ -16,7 +17,7 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
           <span> Premium </span>
         </div>}
       <div className='favorites__image-wrapper place-card__image-wrapper'>
-        <a href='#'>
+        <Link to = {AppRoute.Offer.replace(':id', String(favoritesData?.id))}>
           <img
             className='place-card__image'
             src={favoritesData?.previewImage}
@@ -24,7 +25,7 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
             height={110}
             alt='Place image'
           />
-        </a>
+        </Link>
       </div>
       <div className='favorites__card-info place-card__info'>
         <div className='place-card__price-wrapper'>
