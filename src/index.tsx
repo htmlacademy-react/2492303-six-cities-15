@@ -5,7 +5,7 @@ import {store} from './store';
 import {checkAuthAction, fetchOffersAction} from './store/api-actions';
 import HistoryRouter from './components/history-route/history-route';
 import browserHistory from './browser-history';
-import App from './app1/app';
+import App from './app/app';
 
 
 store.dispatch(fetchOffersAction());
