@@ -1,52 +1,51 @@
 import { FC, PropsWithChildren } from 'react';
-import { MainPage, TMainPageProps } from '../pages/main';
+import { MainPage } from '../pages/main';
 import { HelmetProvider } from 'react-helmet-async';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { AppRoute, TFavoriteData } from '../const';
+import { Route, Routes } from 'react-router-dom';
+import { AppRoute } from '../const';
 import Login from '../pages/login';
 import {Favorites} from '../pages/favorites';
 import { NotFoundScreen } from '../pages/not-found-screen';
 import PrivateRoute from '../components/private-route/private-route';
 import Offer from '../pages/offer';
+import { useAppSelector } from '../components/hooks';
 
-export type TAppProps = {
-  favoriteData: TFavoriteData[];
-  mainPageProps: TMainPageProps;
-}
 
-export const App: FC<PropsWithChildren<TAppProps>> = (props: TAppProps) => (
-  <HelmetProvider>
-    <BrowserRouter>
+export const App: FC<PropsWithChildren> = () => {
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
+  return (
+    <HelmetProvider>
       <Routes >
         <Route
           path={AppRoute.Main}
-          element={<MainPage {...props.mainPageProps} />}
+          element={<MainPage />}
         />
         <Route
           path={AppRoute.Login}
           element={<Login />}
         />
-        <Route path= {AppRoute.Offer}>
-          <Route path=':id' element={<Offer />} />
-        </Route>
         <Route
-          path='*'
-          element={<NotFoundScreen />}
+          path= {AppRoute.Offer}
+          element={<Offer />}
         />
         <Route
           path={AppRoute.Favorites}
           element={
             <PrivateRoute
-              authorizationStatus={false}
+              authorizationStatus={authorizationStatus}
             >
-              <Favorites favoriteData={props.favoriteData} cardAmount={3}/>
+              <Favorites/>
             </PrivateRoute>
           }
         />
+        <Route
+          path='*'
+          element={<NotFoundScreen />}
+        />
       </Routes>
-    </BrowserRouter>
-  </HelmetProvider>
-);
-
+    </HelmetProvider>
+  );
+};
 
 export default App;

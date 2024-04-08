@@ -1,28 +1,55 @@
+import { Link, Navigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus } from '../const';
+import { useAppDispatch, useAppSelector } from '../components/hooks';
+import { loginAction } from '../store/api-actions';
+import { FormEvent, useRef } from 'react';
+
 function Login() : JSX.Element {
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+
+  const dispatch = useAppDispatch();
+  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+
+    evt.preventDefault();
+    if (loginRef.current !== null && passwordRef.current !== null) {
+      dispatch(loginAction({
+        login: loginRef.current.value,
+        password: passwordRef.current.value
+      }));
+    }
+  };
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
+  if (authorizationStatus === AuthorizationStatus.Auth){
+    return <Navigate to={AppRoute.Main} />;
+  }
+
   return(
     <div className='page page--gray page--login'>
       <header className='header'>
         <div className='container'>
           <div className='header__wrapper'>
             <div className='header__left'>
-              <a className='header__logo-link' href='main.html'>
+              <Link to={AppRoute.Main} className='header__logo-link'>
                 <img
                   className='header__logo'
                   src='img/logo.svg'
                   alt='6 cities logo'
                   width={81}
                   height={41}
-                />
-              </a>
+                >
+                </img>
+              </Link>
             </div>
           </div>
         </div>
       </header>
-      <main className='page__main page__main--login'>
+      <main className='page__main page__main--login' data-testid="login-page">
         <div className='page__login-container container'>
           <section className='login'>
             <h1 className='login__title'>Sign in</h1>
-            <form className='login__form form' action='#' method='post'>
+            <form className='login__form form' action='#' method='post' onSubmit={handleSubmit}>
               <div className='login__input-wrapper form__input-wrapper'>
                 <label className='visually-hidden'>E-mail</label>
                 <input
@@ -30,7 +57,8 @@ function Login() : JSX.Element {
                   type='email'
                   name='email'
                   placeholder='Email'
-                  //required=''
+                  ref={loginRef}
+                  required
                 />
               </div>
               <div className='login__input-wrapper form__input-wrapper'>
@@ -40,11 +68,13 @@ function Login() : JSX.Element {
                   type='password'
                   name='password'
                   placeholder='Password'
-                  //required=''
+                  ref={passwordRef}
+                  required
+                  pattern="(?=^.{2,}$)((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Za-z]).*"
                 />
               </div>
               <button className='login__submit form__submit button' type='submit'>
-                Sign in
+                  Sign in
               </button>
             </form>
           </section>

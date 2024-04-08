@@ -1,39 +1,40 @@
-import { FC, useState } from 'react';
+import { FC, useState, useCallback } from 'react';
 import { OfferList } from '../components/offer-list/offer-list';
-import { Point, Points, TCity, TOffer, TOffersData } from '../const';
+import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
 import Map from '../components/map/map.tsx';
 import { CityList } from '../components/city/city_list.tsx';
-import { City } from '../mocks/city.ts';
-import OffersData from '../mocks/offers.ts';
+import { cities } from '../mocks/city.ts';
+import { Popular } from '../components/popular/popular.tsx';
+import SortOffer from '../components/popular/sort-offer.ts';
+import { useAppDispatch, useAppSelector } from '../components/hooks/index.ts';
+import { updateCity } from '../store/action.ts';
+import { MoonLoader } from 'react-spinners';
+import { Link } from 'react-router-dom';
+import { logoutAction } from '../store/api-actions.ts';
+import { useSelector } from 'react-redux';
+import { makeOffersFilter } from '../store/offer-process/selectors.ts';
 
-export type TMainPageProps = {
-  cardAmount: number;
-  offersData: TOffersData[];
-  points: Points;
-}
-
-export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
-  const {points} = props;
-
-  const [activeCity, setActiveCity] = useState<TCity>({
-    id: 4,
-    title: 'Paris',
-    lat: 55.3609553943508,
-    lng: 4.85309666406198,
-    zoom: 10
-  });
-
+export const MainPage: FC = () => {
+  const offers = useAppSelector((state) => state.DATA.offers);
+  const user = useAppSelector((state) => state.USER.User);
+  const offersFilter = useSelector(makeOffersFilter);
+  const [typeS, setTypeS] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
-  const handlerHover = (offer?: TOffer) => {
-    setSelectedPoint(offer ? offer.location : null);
+  const handlerHover = useCallback (
+    (offer?: TOffer) => {
+      setSelectedPoint(offer ? offer.location : null);
+    }, []
+  );
+  const activeCity = useAppSelector((state) => state.DATA.city);
+  const isOffersLoading = useAppSelector((state) => state.DATA.isOffersLoading);
+  const dispatch = useAppDispatch();
+  const handleClick = (city: TCity) => {
+    dispatch(updateCity(city));
   };
-
-  const handleClick = (id: number, title: string, lat: number, lng: number, zoom: number) => {
-    setActiveCity({id, title, lat, lng, zoom});
-  };
-
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+  const favorite = useAppSelector((state) => state.DATA.favorites);
   return (
-    <div className="page page--gray page--main">
+    <div className="page page--gray page--main" data-testid="main-page">
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -48,83 +49,97 @@ export const MainPage: FC<TMainPageProps> = (props: TMainPageProps) => {
                 />
               </a>
             </div>
-            <nav className="header__nav">
-              <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                    Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
+            {authorizationStatus === AuthorizationStatus.Auth &&
+              <nav className="header__nav">
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <Link to={AppRoute.Favorites}
+                      className="header__nav-link header__nav-link--profile"
+                    >
+                      <div className="header__avatar-wrapper user__avatar-wrapper">
+                        <img
+                          style={{borderRadius: 10}}
+                          src={user?.avatarUrl}
+                        />
+                      </div>
+                      <span className="header__user-name user__name" >
+                        {user?.email}
+                      </span>
+                      <span className="header__favorite-count">{favorite?.length}</span>
+                    </Link>
+                  </li>
+                  <li className="header__nav-item">
+                    <Link to={AppRoute.Main} className="header__nav-link" >
+                      <span className="header__signout" onClick={() => {
+                        dispatch(logoutAction());
+                      }}
+                      >
+                          Sign out
+                      </span>
+                    </Link>
+                  </li>
+                </ul>
+              </nav>}
+            {authorizationStatus === AuthorizationStatus.NoAuth &&
+              <nav className="header__nav">
+                <ul className="header__nav-list">
+                  <li className="header__nav-item user">
+                    <Link to={AppRoute.Login} className="header__login">
+                      Sign in
+                    </Link>
+                  </li>
+                </ul>
+              </nav>}
           </div>
         </div>
       </header>
-      <main className="page__main page__main--index">
+      <main className= {`${offers.length > 0 ? 'page__main page__main--index' : 'page__main page__main--index page__main--index-empty'}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
             <ul className="locations__list tabs__list" >
-              {City.map((item) => (
-                <div key={item.id} onClick={() => handleClick(item.id, item.title, item.lat, item.lng, item.zoom)}>
-                  <CityList key={item.id} name={item.title}/>
-                </div>
+              {cities.map((item) => (
+                <li className="locations__item" key={item.id} onClick={() => handleClick(item)}>
+                  <CityList key={item.id} title={item.name}/>
+                </li>
               ))}
             </ul>
           </section>
         </div>
+        {isOffersLoading && <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}><MoonLoader /></div>}
+        {offers.length > 0 &&
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">{OffersData.filter((item) => item.city.id === activeCity.id).length} places to stay in {activeCity.title}</b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                Popular
-                  <svg className="places__sorting-arrow" width={7} height={4}>
-                    <use xlinkHref="#icon-arrow-select" />
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li
-                    className="places__option places__option--active"
-                    tabIndex={0}
-                  >
-                  Popular
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                  Price: low to high
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                  Price: high to low
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                  Top rated first
-                  </li>
-                </ul>
-              </form>
-              <OfferList offersData={props.offersData} cardAmount={props.cardAmount} handlerHover={handlerHover} city={activeCity}/>
+              <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} {offersFilter.length === 1 ? 'place' : 'places' } to stay in {activeCity.name}</b>
+              <Popular setTypeS={setTypeS}/>
+              <OfferList offers={SortOffer(offersFilter,typeS)} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map activeCity={activeCity} points={points} selectedPoint={selectedPoint} />
+                {
+                  offersFilter.length > 0 && <Map activeCity={activeCity} points={offersFilter.map((item)=> item.location)} selectedPoint={selectedPoint} />
+                }
               </section>
             </div>
           </div>
-        </div>
+        </div>}
+        {!isOffersLoading && offers.length === 0 &&
+        <div className="cities">
+          <div className='cities__places-container cities__places-container--empty container'>
+            <section className='cities__no-places'>
+              <div className='cities__status-wrapper tabs__content'>
+                <b className='cities__status'>No places to stay available</b>
+                <p className='cities__status-description'>
+                  We could not find any property available at the moment in{' '}
+                  {activeCity.name}
+                </p>
+              </div>
+            </section>
+            <div className='cities__right-section'/>
+          </div>
+        </div>}
       </main>
     </div>
   );

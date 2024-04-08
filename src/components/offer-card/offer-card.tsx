@@ -1,51 +1,72 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
-import { AppRoute, Points, TOffer, TOffersData } from '../../const';
+import { useNavigate } from 'react-router-dom';
+import { AppRoute, AuthorizationStatus, TOffer } from '../../const';
+import { AddFavoriteAction } from '../../store/api-actions';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { memo } from 'react';
 
 export type TOfferCardPageProps = {
-  offersData: TOffersData;
-  handlerHover: (offer?: TOffer) => void;
-  points: Points;
+  offer: TOffer;
+  handlerHover?: (offer?: TOffer) => void;
+  typeCard: 'offer' | 'near';
 }
 
-export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, points}) => {
+const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => {
+  const dispatch = useAppDispatch();
   const handleMouseOver = () => {
-    const currentPoint = points.find((point) => point.title === offersData.name);
-    if (currentPoint){
-      handlerHover(offersData);
+    if (handlerHover){
+      handlerHover(offer);
     }
   };
   const handleMouseOut = () => {
-    handlerHover();
+    if (handlerHover){
+      handlerHover();
+    }
   };
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
+  const handleClick = (event: { stopPropagation: () => void}) => {
+    if (authorizationStatus === AuthorizationStatus.NoAuth){
+      navigate(AppRoute.Login);
+    }
+    event.stopPropagation();
+    dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
+  };
+
   return(
-    <article className="cities__card place-card">
+    <article className= {typeCard === 'offer' ? 'cities__card place-card' : 'near-places__card place-card'}
+      onClick={() => navigate(AppRoute.Offer.replace(':id', String(offer?.id)))} style={{cursor : 'pointer'}}
+      onMouseOver={handleMouseOver}
+      onMouseLeave={handleMouseOut}
+    >
+      {offer?.isPremium &&
+          <div className="place-card__mark">
+            <span>Premium</span>
+          </div>}
       <div
-        className="cities__image-wrapper place-card__image-wrapper"
-        onMouseOver={handleMouseOver}
-        onMouseLeave={handleMouseOut}
+        className= {typeCard === 'offer' ? 'cities__image-wrapper place-card__image-wrapper' : 'near-places__image-wrapper place-card__image-wrapper'}
       >
-        <Link to= {AppRoute.Offer + offersData.id}>
-          <img
-            className="place-card__image"
-            src="img/room.jpg"
-            width={260}
-            height={200}
-            alt="Place image"
-          />
-        </Link>
+        <img
+          className="place-card__image"
+          src= {offer?.previewImage}
+          width={260}
+          height={200}
+          alt="Place image"
+        />
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{offersData.price}€</b>
+            <b className="place-card__price-value">€{offer?.price}</b>
             <span className="place-card__price-text">
-            /&nbsp;{offersData.period}
+              /&nbsp;{offer?.type}
             </span>
           </div>
           <button
-            className="place-card__bookmark-button place-card__bookmark-button--active button"
+            className= {offer?.isFavorite === false ? 'place-card__bookmark-button button' : 'place-card__bookmark-button place-card__bookmark-button--active button'}
             type="button"
+            onClick={handleClick}
           >
             <svg
               className="place-card__bookmark-icon"
@@ -54,20 +75,24 @@ export const OfferCard: FC<TOfferCardPageProps> = ({offersData, handlerHover, po
             >
               <use xlinkHref="#icon-bookmark" />
             </svg>
-            <span className="visually-hidden">In  </span>
+            <span className="visually-hidden">To bookmarks  </span>
           </button>
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: offersData.rating}} />
-            <span className="visually-hidden">Rating</span>
+            <span style={{ width: `${Math.round(offer?.rating) * 20 }%`}} />
+            <span className="visually-hidden">{offer?.rating}</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{offersData.name}</a>
+          <a href="#">{offer?.title}</a>
+          {offer?.isFavorite}
         </h2>
-        <p className="place-card__type">{offersData.type}</p>
+        <p className="place-card__type">{offer?.type}</p>
       </div>
     </article>
   );
 };
+const OfferMemo = memo(OfferCard);
+OfferMemo.displayName = 'OfferCard';
+export default OfferMemo;

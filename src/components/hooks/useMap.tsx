@@ -1,7 +1,7 @@
 import {useEffect, useState, useRef, MutableRefObject} from 'react';
-import leaflet from 'leaflet';
+import leaflet, { TileLayer } from 'leaflet';
 import {Map} from 'leaflet';
-import { TCity, layer } from '../../const';
+import { TCity } from '../../const';
 
 function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
@@ -9,23 +9,28 @@ function useMap(
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const layer = new TileLayer(
+    'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+    {
+      attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    });
   useEffect(() => {
     if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = leaflet.map(mapRef.current, {
         center: {
-          lat: 52.3609553943508,
-          lng: 4.85309666406198
+          lat: city.location.latitude,
+          lng: city.location.longitude
         },
-        zoom: 10,
+        zoom: city.location.zoom,
       });
-
       instance.addLayer(layer);
 
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [mapRef, city, layer]);
 
   return map;
 }
