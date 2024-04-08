@@ -1,8 +1,8 @@
 import { Link, Navigate } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../const';
-import { useAppDispatch, useAppSelector } from '../components/hooks';
-import { loginAction } from '../store/api-actions';
 import { FormEvent, useRef } from 'react';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { loginAction } from '../../store/api-actions';
+import { AppRoute, AuthorizationStatus } from '../../const';
 
 function Login() : JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);

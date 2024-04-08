@@ -1,15 +1,15 @@
 import {Link, useNavigate, useParams} from 'react-router-dom';
-import { AppRoute, AuthorizationStatus, TOffer} from '../const';
-import { FormReview } from '../components/form-review/form-review';
-import { Reviews } from '../components/reviews/reviews';
-import Map from '../components/map/map';
-import { useEffect } from 'react';
-import { useAppDispatch, useAppSelector } from '../components/hooks';
-import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../store/api-actions';
-import { NotFoundScreen } from './not-found-screen';
-import { OfferList } from '../components/offer-list/offer-list';
-import { cities } from '../mocks/city';
 import { MoonLoader } from 'react-spinners';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../../store/api-actions';
+import { useEffect } from 'react';
+import { FormReview } from '../../components/form-review/form-review';
+import { OfferList } from '../../components/offer-list/offer-list';
+import { TOffer, AuthorizationStatus, AppRoute } from '../../const';
+import { cities } from '../../mocks/city';
+import { NotFoundScreen } from '../not-found-screen/not-found-screen';
+import Map from '../../components/map/map';
+import { Reviews } from './../../components/reviews/reviews';
 
 function Offer(): JSX.Element {
   const params = useParams();
@@ -191,7 +191,7 @@ function Offer(): JSX.Element {
                 </div>
               </div>
               <section className='offer__reviews reviews'>
-                <Reviews/>
+                <Reviews />
                 {authorizationStatus === AuthorizationStatus.Auth && <FormReview offerId={offer?.id}/>}
               </section>
             </div>

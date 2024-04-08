@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { ReviewsInfo } from './reviews_info';
+import { ReviewsInfo } from './reviews-info';
 
 describe('Component: Mistakes', () => {
   it('should render correct', () => {

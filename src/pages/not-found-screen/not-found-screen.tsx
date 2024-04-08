@@ -1,7 +1,7 @@
 import {Link} from 'react-router-dom';
 import {Helmet} from 'react-helmet-async';
 import { FC } from 'react';
-import { AppRoute } from '../const';
+import { AppRoute } from '../../const';
 
 export const NotFoundScreen: FC = ()=> (
   <section>

@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import { AppRoute, TOffer } from '../../const';
-import { useAppDispatch } from '../hooks';
+import { AppRoute, AuthorizationStatus, TOffer } from '../../const';
+import { useAppDispatch, useAppSelector } from '../hooks';
 import { AddFavoriteAction } from '../../store/api-actions';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export type TOfferCardPageProps = {
   favoritesData: TOffer;
@@ -10,22 +10,33 @@ export type TOfferCardPageProps = {
 
 export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
+
+  const handleClick = (event: { stopPropagation: () => void}) => {
+    if (authorizationStatus === AuthorizationStatus.NoAuth){
+      navigate(AppRoute.Login);
+    }
+    event.stopPropagation();
+    dispatch(AddFavoriteAction({status: Number(!favoritesData.isFavorite),offerId: favoritesData.id }));
+  };
+
   return (
-    <article className='favorites__card place-card'>
+    <article className='favorites__card place-card'
+      onClick={() => navigate(AppRoute.Offer.replace(':id', String(favoritesData?.id)))} style={{cursor : 'pointer'}}
+    >
       {favoritesData.isPremium &&
         <div className="place-card__mark">
           <span> Premium </span>
         </div>}
       <div className='favorites__image-wrapper place-card__image-wrapper'>
-        <Link to = {AppRoute.Offer.replace(':id', String(favoritesData?.id))}>
-          <img
-            className='place-card__image'
-            src={favoritesData?.previewImage}
-            width={150}
-            height={110}
-            alt='Place image'
-          />
-        </Link>
+        <img
+          className='place-card__image'
+          src={favoritesData?.previewImage}
+          width={150}
+          height={110}
+          alt='Place image'
+        />
       </div>
       <div className='favorites__card-info place-card__info'>
         <div className='place-card__price-wrapper'>
@@ -38,9 +49,7 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
           <button
             className='place-card__bookmark-button place-card__bookmark-button--active button'
             type='button'
-            onClick={() => {
-              dispatch(AddFavoriteAction({status: Number(!favoritesData.isFavorite),offerId: favoritesData.id }));
-            }}
+            onClick={handleClick}
           >
             <svg
               className='place-card__bookmark-icon'
@@ -59,7 +68,7 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
           </div>
         </div>
         <h2 className='place-card__name'>
-          <a href='#'>{favoritesData?.title}</a>
+          {favoritesData?.title}
         </h2>
         <p className='place-card__type'>{favoritesData?.type}</p>
       </div>

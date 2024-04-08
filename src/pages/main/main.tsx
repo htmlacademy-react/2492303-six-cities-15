@@ -1,18 +1,19 @@
 import { FC, useState, useCallback } from 'react';
-import { OfferList } from '../components/offer-list/offer-list';
-import { AppRoute, AuthorizationStatus, Point, TCity, TOffer} from '../const';
-import Map from '../components/map/map.tsx';
-import { CityList } from '../components/city/city_list.tsx';
-import { cities } from '../mocks/city.ts';
-import { Popular } from '../components/popular/popular.tsx';
-import SortOffer from '../components/popular/sort-offer.ts';
-import { useAppDispatch, useAppSelector } from '../components/hooks/index.ts';
-import { updateCity } from '../store/action.ts';
-import { MoonLoader } from 'react-spinners';
-import { Link } from 'react-router-dom';
-import { logoutAction } from '../store/api-actions.ts';
 import { useSelector } from 'react-redux';
-import { makeOffersFilter } from '../store/offer-process/selectors.ts';
+import { Link } from 'react-router-dom';
+import { MoonLoader } from 'react-spinners';
+import { CityList } from '../../components/city-list/city-list';
+import { useAppSelector, useAppDispatch } from '../../components/hooks';
+import { OfferList } from '../../components/offer-list/offer-list';
+import { Popular } from '../../components/popular/popular';
+import SortOffer from '../../components/popular/sort-offer';
+import { TOffer, TCity, AuthorizationStatus, AppRoute, Point } from '../../const';
+import { cities } from '../../mocks/city';
+import { updateCity } from '../../store/action';
+import { logoutAction } from '../../store/api-actions';
+import { makeOffersFilter } from '../../store/offer-process/selectors';
+import Map from '../../components/map/map';
+
 
 export const MainPage: FC = () => {
   const offers = useAppSelector((state) => state.DATA.offers);

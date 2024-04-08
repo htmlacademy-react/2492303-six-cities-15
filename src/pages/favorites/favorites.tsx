@@ -1,9 +1,9 @@
 import { FC, useEffect } from 'react';
-import { FavoriteList } from '../components/favorite-list/favorite-list';
-import { useAppDispatch, useAppSelector } from '../components/hooks';
-import { fetchFavoriteAction, logoutAction } from '../store/api-actions';
-import { AppRoute } from '../const';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../../components/hooks';
+import { AppRoute } from '../../const';
+import { FavoriteList } from '../../components/favorite-list/favorite-list';
+import { fetchFavoriteAction, logoutAction } from '../../store/api-actions';
 
 export const Favorites: FC = () => {
   const dispatch = useAppDispatch();

@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TComments } from '../../const';
+import { TComments } from '../../../const';
 
 export type TReviewsInfoProps = {
   reviewData: TComments;

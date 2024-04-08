@@ -1,5 +1,5 @@
 import { FC, useEffect } from 'react';
-import { ReviewsList } from './reviews_list';
+import { ReviewsList } from './review-list/reviews-list';
 import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { fetchOfferCommentsAction } from '../../store/api-actions';

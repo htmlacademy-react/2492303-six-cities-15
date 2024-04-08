@@ -1,7 +1,7 @@
 import { FC } from 'react';
-import { ReviewsInfo } from './reviews_info';
-import { ReviewUser } from './review_user';
-import { TComments} from '../../const';
+import { ReviewsInfo } from '../review-info/reviews-info';
+import { ReviewUser } from '../review-user/review-user';
+import { TComments} from '../../../const';
 
 export type TReviewDataProps = {
   ReviewsData?: TComments[];
