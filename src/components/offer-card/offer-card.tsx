@@ -85,7 +85,7 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">{offer?.title}</a>
+          {offer?.title}
           {offer?.isFavorite}
         </h2>
         <p className="place-card__type">{offer?.type}</p>

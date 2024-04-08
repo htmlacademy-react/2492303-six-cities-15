@@ -1,14 +1,14 @@
 import { FC, PropsWithChildren } from 'react';
-import { MainPage } from '../pages/main';
 import { HelmetProvider } from 'react-helmet-async';
 import { Route, Routes } from 'react-router-dom';
-import { AppRoute } from '../const';
-import Login from '../pages/login';
-import {Favorites} from '../pages/favorites';
-import { NotFoundScreen } from '../pages/not-found-screen';
 import PrivateRoute from '../components/private-route/private-route';
-import Offer from '../pages/offer';
+import { MainPage } from '../pages/main/main';
 import { useAppSelector } from '../components/hooks';
+import { Favorites } from './../pages/favorites/favorites';
+import { NotFoundScreen } from './../pages/not-found-screen/not-found-screen';
+import { AppRoute } from '../const';
+import Login from '../pages/login/login';
+import Offer from './../pages/offer/offer';
 
 export const App: FC<PropsWithChildren> = () => {
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);

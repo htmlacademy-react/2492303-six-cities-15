@@ -3,9 +3,9 @@ import { MemoryHistory, createMemoryHistory } from 'history';
 import { AppRoute } from '../const';
 import { withHistory, withStore } from '../utils/mock-component';
 import { makeFakeStore } from '../utils/mocks';
-import { MainPage } from '../pages/main';
-import Login from '../pages/login';
-import { NotFoundScreen } from '../pages/not-found-screen';
+import Login from '../pages/login/login';
+import { MainPage } from '../pages/main/main';
+import { NotFoundScreen } from '../pages/not-found-screen/not-found-screen';
 
 
 describe('Application Routing', () => {
