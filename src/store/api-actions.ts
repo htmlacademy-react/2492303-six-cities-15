@@ -78,6 +78,7 @@ export const loginAction = createAsyncThunk<UserData, AuthData, {
     saveToken(data.token);
     dispatch(redirectToRoute(AppRoute.Main));
     dispatch(fetchFavoriteAction(''));
+    dispatch(fetchOffersAction());
     return data;
   },
 );
@@ -92,6 +93,7 @@ export const logoutAction = createAsyncThunk<void, undefined, {
     await api.delete(APIRoute.Logout);
     dropToken();
     dispatch(fetchFavoriteAction(''));
+    dispatch(fetchOffersAction());
   },
 );
 
@@ -132,7 +134,6 @@ export const AddFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
     const {data} = await api.post<TOfferFull>(`${APIRoute.Favorites + offerId }/${status}`);
     if (offerId){
       dispatch(fetchFavoriteAction(offerId));
-      dispatch(fetchOfferAction(offerId));
       dispatch(fetchOffersAction());
     }
 

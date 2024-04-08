@@ -9,7 +9,7 @@ export type InitalState = {
   offersNear: TOffer[];
   offer?: TOfferFull;
   city: TCity;
-  isOfferLoading: boolean;
+  isOffersLoading: boolean;
   hasError: boolean;
   authorizationStatus: AuthorizationStatus;
   comments?: TComments[];
@@ -20,7 +20,7 @@ const initialState: InitalState = {
   offers: [],
   offersNear: [],
   city: cities[0],
-  isOfferLoading: false,
+  isOffersLoading: false,
   hasError: false,
   authorizationStatus: AuthorizationStatus.NoAuth,
 };
@@ -34,11 +34,11 @@ export const reducer = createReducer(initialState, (builder) => {
       state.city = action.payload;
     })
     .addCase(fetchOffersAction.pending, (state) => {
-      state.isOfferLoading = true;
+      state.isOffersLoading = true;
     })
     .addCase(fetchOffersAction.fulfilled, (state, action) => {
       state.offers = action.payload;
-      state.isOfferLoading = false;
+      state.isOffersLoading = false;
     })
     .addCase(loginAction.fulfilled, (state) => {
       state.authorizationStatus = AuthorizationStatus.Auth;
