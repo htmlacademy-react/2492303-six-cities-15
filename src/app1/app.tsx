@@ -10,7 +10,6 @@ import PrivateRoute from '../components/private-route/private-route';
 import Offer from '../pages/offer';
 import { useAppSelector } from '../components/hooks';
 
-
 export const App: FC<PropsWithChildren> = () => {
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
 
