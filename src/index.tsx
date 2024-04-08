@@ -7,6 +7,7 @@ import HistoryRouter from './components/history-route/history-route';
 import browserHistory from './browser-history';
 import App from './app/app';
 
+
 store.dispatch(fetchOffersAction());
 store.dispatch(checkAuthAction());
 
