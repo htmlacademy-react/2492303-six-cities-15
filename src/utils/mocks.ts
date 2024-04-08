@@ -9,7 +9,7 @@ export type AppThunkDispatch = ThunkDispatch<State, ReturnType<typeof createAPI>
 
 export const makeFakeStore = (initialState?: Partial<State>): State => ({
   USER: { authorizationStatus: AuthorizationStatus.NoAuth },
-  DATA: { isOffersLoading: false, offers: [], hasError: false, offersNear:[], city:cities[0], favorites:[] },
+  DATA: { isOffersLoading: false, isOfferLoading: false, offers: [], hasError: false, offersNear:[], city:cities[0], favorites:[] },
   ...initialState ?? {},
 });
 
