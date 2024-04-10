@@ -34,7 +34,12 @@ export const Favorites: FC = () => {
                   <Link to = {AppRoute.Favorites}
                     className='header__nav-link header__nav-link--profile'
                   >
-                    <div className='header__avatar-wrapper user__avatar-wrapper'></div>
+                    <div className="header__avatar-wrapper user__avatar-wrapper">
+                      <img
+                        style={{borderRadius: 10}}
+                        src={user?.avatarUrl}
+                      />
+                    </div>
                     <span className='header__user-name user__name'>
                       {user?.email}
                     </span>

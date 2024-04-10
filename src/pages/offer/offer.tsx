@@ -44,6 +44,9 @@ function Offer(): JSX.Element {
     }
     dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
   };
+  if (isOfferLoading) {
+    return <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}> <MoonLoader /></div>;
+  }
   return (
     <div className='page'>
       <header className='header'>
@@ -68,7 +71,12 @@ function Offer(): JSX.Element {
                     className='header__nav-link header__nav-link--profile'
                     to = {AppRoute.Favorites}
                   >
-                    <div className='header__avatar-wrapper user__avatar-wrapper'></div>
+                    <div className="header__avatar-wrapper user__avatar-wrapper">
+                      <img
+                        style={{borderRadius: 10}}
+                        src={user?.avatarUrl}
+                      />
+                    </div>
                     <span className='header__user-name user__name'>
                       {user?.email}
                     </span>
@@ -100,7 +108,6 @@ function Offer(): JSX.Element {
           </div>
         </div>
       </header>
-      {isOfferLoading && <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}> <MoonLoader /></div>}
       <main className='page__main page__main--offer'>
         <section className='offer'>
           <div className='offer__gallery-container container'>
@@ -120,7 +127,7 @@ function Offer(): JSX.Element {
             <div className='offer__wrapper'>
               {offer?.isPremium &&
               <div className='offer__mark'>
-                <span className='offer__mark'>Premium</span>
+                <span>Premium</span>
               </div>}
               <div className='offer__name-wrapper'>
                 <h1 className='offer__name'>
