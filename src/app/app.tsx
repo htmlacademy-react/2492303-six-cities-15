@@ -6,13 +6,17 @@ import { MainPage } from '../pages/main/main';
 import { useAppSelector } from '../components/hooks';
 import { Favorites } from './../pages/favorites/favorites';
 import { NotFoundScreen } from './../pages/not-found-screen/not-found-screen';
-import { AppRoute } from '../const';
+import { AppRoute, AuthorizationStatus } from '../const';
 import Login from '../pages/login/login';
 import Offer from './../pages/offer/offer';
+import { MoonLoader } from 'react-spinners';
 
 export const App: FC<PropsWithChildren> = () => {
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
-
+  const isOffersLoading = useAppSelector((state) => state.DATA.isOffersLoading);
+  if (isOffersLoading || authorizationStatus === AuthorizationStatus.Unknown) {
+    return <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}><MoonLoader /></div>;
+  }
   return (
     <HelmetProvider>
       <Routes >

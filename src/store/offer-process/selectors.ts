@@ -8,6 +8,7 @@ export const getCurrentCity = (state: Pick<State, NameSpace.Data>): TCity => sta
 export const getDataLoadingStatus = (state: Pick<State, NameSpace.Data>): boolean => state[NameSpace.Data].isOffersLoading;
 export const getErrorStatus = (state: Pick<State, NameSpace.Data>): boolean => state[NameSpace.Data].hasError;
 export const getReviews = (state: Pick<State, NameSpace.Data>): TComments[] => state[NameSpace.Data].comments || [];
+export const getAddCommentStatus = (state: Pick<State, NameSpace.Data>) => state[NameSpace.Data].addCommentStatus;
 
 export const makeOffersFilter = createSelector(
   [ getOffers, getCurrentCity ],(offers, city) => offers.filter((offer: TOffer) => offer.city.name === city.name)

@@ -1,19 +1,32 @@
 import { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { FavoriteList } from '../../components/favorite-list/favorite-list';
 import { fetchFavoriteAction, logoutAction } from '../../store/api-actions';
+import { MoonLoader } from 'react-spinners';
+import { updateCity } from '../../store/action';
+import { cities } from '../../mocks/city';
 
 export const Favorites: FC = () => {
   const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.USER.User);
+  const user = useAppSelector((state) => state.USER.user);
+  const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
   useEffect (() => {
-    dispatch(fetchFavoriteAction(''));
-  },[dispatch]);
-  const favorite = useAppSelector((state) => state.DATA.favorites);
+    if (authorizationStatus === AuthorizationStatus.Auth){
+      dispatch(fetchFavoriteAction(''));
+    }
+  },[dispatch, authorizationStatus]);
+  const favorites = useAppSelector((state) => state.DATA.favorites);
+  const isFavoritesLoading = useAppSelector((state) => state.DATA.isFavoritesLoading);
+  if (isFavoritesLoading){
+    return <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}><MoonLoader /></div>;
+  }
+  const handleClick = (nameCity: string) => {
+    dispatch(updateCity(cities.find((item) => (item.name === nameCity)) || cities[0]));
+  };
   return (
-    <div className='page'>
+    <div className={`page ${!favorites || favorites?.length === 0 ? 'page--favorites-empty' : ''} `}>
       <header className='header'>
         <div className='container'>
           <div className='header__wrapper'>
@@ -43,15 +56,15 @@ export const Favorites: FC = () => {
                     <span className='header__user-name user__name'>
                       {user?.email}
                     </span>
-                    <span className='header__favorite-count'>{favorite?.length}</span>
+                    <span className='header__favorite-count'>{favorites?.length}</span>
                   </Link>
                 </li>
                 <li className='header__nav-item'>
-                  <Link to = {AppRoute.Main} className='header__nav-link'>
-                    <span className='header__signout' onClick={() => {
-                      dispatch(logoutAction());
-                    }}
-                    >
+                  <Link to = {AppRoute.Login} className='header__nav-link' onClick={() => {
+                    dispatch(logoutAction());
+                  }}
+                  >
+                    <span className='header__signout'>
                       Sign out
                     </span>
                   </Link>
@@ -64,7 +77,7 @@ export const Favorites: FC = () => {
       <main className='page__main page__main--favorites'>
         <div className='page__favorites-container container'>
           {
-            (!favorite || favorite?.length === 0) &&
+            (!favorites || favorites?.length === 0) &&
             <section className="favorites favorites--empty">
               <h1 className = "visually-hidden">Favorites (empty)</h1>
               <div className="favorites__status-wrapper">
@@ -73,21 +86,21 @@ export const Favorites: FC = () => {
               </div>
             </section>
           }
-          {favorite?.length > 0 &&
+          {favorites?.length > 0 &&
           <section className='favorites'>
             <h1 className='favorites__title'>Saved listing</h1>
             <ul className='favorites__list'>
-              {[... new Set(favorite?.map(((item) => item.city.name)))].map(((item) =>
+              {[... new Set(favorites?.map(((item) => item.city.name)))].map(((item) =>
                 (
                   <li key={item} className='favorites__locations-items'>
                     <div className='favorites__locations locations locations--current'>
                       <div className='locations__item'>
-                        <a className='locations__item-link' href='#'>
+                        <Link to = {AppRoute.Main} className='locations__item-link' onClick={() => handleClick(item)}>
                           <span>{item}</span>
-                        </a>
+                        </Link>
                       </div>
                     </div>
-                    <FavoriteList favoriteData={favorite?.filter((it)=> it.city.name === item)} cardAmount={favorite?.filter((it)=> it.city.name === item).length} />
+                    <FavoriteList favoriteData={favorites?.filter((it)=> it.city.name === item)} cardAmount={favorites?.filter((it)=> it.city.name === item).length} />
                   </li>
                 )
               ))}
@@ -96,7 +109,7 @@ export const Favorites: FC = () => {
         </div>
       </main>
       <footer className='footer container'>
-        <a className='footer__logo-link' href='main.html'>
+        <Link to = {AppRoute.Main} className='footer__logo-link'>
           <img
             className='footer__logo'
             src='img/logo.svg'
@@ -104,7 +117,7 @@ export const Favorites: FC = () => {
             width={64}
             height={33}
           />
-        </a>
+        </Link>
       </footer>
     </div>
   );

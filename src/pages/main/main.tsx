@@ -5,7 +5,7 @@ import { MoonLoader } from 'react-spinners';
 import { CityList } from '../../components/city-list/city-list';
 import { useAppSelector, useAppDispatch } from '../../components/hooks';
 import { OfferList } from '../../components/offer-list/offer-list';
-import { Popular } from '../../components/sorting/sorting';
+import { Sorting } from '../../components/sorting/sorting';
 import SortOffer from '../../components/sorting/sort-offer';
 import { TOffer, TCity, AuthorizationStatus, AppRoute, Point } from '../../const';
 import { cities } from '../../mocks/city';
@@ -17,9 +17,9 @@ import Map from '../../components/map/map';
 
 export const MainPage: FC = () => {
   const offers = useAppSelector((state) => state.DATA.offers);
-  const user = useAppSelector((state) => state.USER.User);
+  const user = useAppSelector((state) => state.USER.user);
   const offersFilter = useSelector(makeOffersFilter);
-  const [typeS, setTypeS] = useState('popular');
+  const [typeSort, setTypeSort] = useState('popular');
   const [selectedPoint, setSelectedPoint] = useState<Point | null>(null);
   const handlerHover = useCallback (
     (offer?: TOffer) => {
@@ -70,11 +70,11 @@ export const MainPage: FC = () => {
                     </Link>
                   </li>
                   <li className="header__nav-item">
-                    <Link to={AppRoute.Main} className="header__nav-link" >
-                      <span className="header__signout" onClick={() => {
-                        dispatch(logoutAction());
-                      }}
-                      >
+                    <Link to={AppRoute.Main} className="header__nav-link" onClick={() => {
+                      dispatch(logoutAction());
+                    }}
+                    >
+                      <span className="header__signout">
                           Sign out
                       </span>
                     </Link>
@@ -114,8 +114,8 @@ export const MainPage: FC = () => {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">{offers.filter((item) => item.city.name === activeCity.name).length} {offersFilter.length === 1 ? 'place' : 'places' } to stay in {activeCity.name}</b>
-              <Popular setTypeS={setTypeS}/>
-              <OfferList offers={SortOffer(offersFilter,typeS)} handlerHover={handlerHover} city={activeCity}/>
+              <Sorting setTypeSort={setTypeSort}/>
+              <OfferList offers={SortOffer(offersFilter,typeSort)} handlerHover={handlerHover} city={activeCity}/>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">

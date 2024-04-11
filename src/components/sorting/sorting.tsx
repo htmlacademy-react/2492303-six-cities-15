@@ -1,10 +1,10 @@
 import { FC, useState } from 'react';
 
-export type TPopularPageProps = {
-  setTypeS: (e: string) => void;
+export type TSortingProps = {
+  setTypeSort: (e: string) => void;
 };
 
-export const Popular: FC<TPopularPageProps> = ({setTypeS}) => {
+export const Sorting: FC<TSortingProps> = ({setTypeSort: setTypeSort}) => {
   const [hover, setHover] = useState(false);
   const [filter, setFilter] = useState('Popular');
   const handleMouseOver = () => {
@@ -21,29 +21,32 @@ export const Popular: FC<TPopularPageProps> = ({setTypeS}) => {
       </span>
       <ul style ={{display: hover ? 'block' : 'none'}} className="places__options places__options--custom places__options--opened">
         <li
-          className="places__option places__option--active"
+          className={`places__option${filter === 'Popular' ? ' places__option--active' : ''}`}
           tabIndex={0}
           onClick={() => {
-            setTypeS('popular');setHover(false);{setFilter('Popular');}
+            setTypeSort('popular');setHover(false);{setFilter('Popular');}
           }}
         >
         Popular
         </li>
-        <li className="places__option" tabIndex={0} onClick={() => {
-          setTypeS('low');setHover(false);setFilter('Price: low to high');
-        }}
+        <li className={`places__option${filter === 'Price: low to high' ? ' places__option--active' : ''}`}
+          tabIndex={0} onClick={() => {
+            setTypeSort('low');setHover(false);setFilter('Price: low to high');
+          }}
         >
         Price: low to high
         </li>
-        <li className="places__option" tabIndex={0} onClick={() => {
-          setTypeS('height');setHover(false);setFilter('Price: high to low');
-        }}
+        <li className={`places__option${filter === 'Price: high to low' ? ' places__option--active' : ''}`}
+          tabIndex={0} onClick={() => {
+            setTypeSort('height');setHover(false);setFilter('Price: high to low');
+          }}
         >
         Price: high to low
         </li>
-        <li className="places__option" tabIndex={0} onClick={() => {
-          setTypeS('rated');setHover(false);setFilter('Top rated first');
-        }}
+        <li className={`places__option${filter === 'Top rated first' ? ' places__option--active' : ''}`}
+          tabIndex={0} onClick={() => {
+            setTypeSort('rated');setHover(false);setFilter('Top rated first');
+          }}
         >
         Top rated first
         </li>

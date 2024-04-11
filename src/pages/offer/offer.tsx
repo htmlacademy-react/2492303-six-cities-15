@@ -1,7 +1,7 @@
-import {Link, useNavigate, useParams} from 'react-router-dom';
+import {Link, useLocation, useNavigate, useParams} from 'react-router-dom';
 import { MoonLoader } from 'react-spinners';
 import { useAppDispatch, useAppSelector } from '../../components/hooks';
-import { AddFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../../store/api-actions';
+import { addFavoriteAction, fetchFavoriteAction, fetchOfferAction, fetchOfferNearAction, logoutAction } from '../../store/api-actions';
 import { useEffect } from 'react';
 import { FormReview } from '../../components/form-review/form-review';
 import { OfferList } from '../../components/offer-list/offer-list';
@@ -13,21 +13,24 @@ import { Reviews } from './../../components/reviews/reviews';
 
 function Offer(): JSX.Element {
   const params = useParams();
+  const location = useLocation();
   const dispatch = useAppDispatch();
   const offer = useAppSelector((state) => state.DATA.offer);
   const favorite = useAppSelector((state) => state.DATA.favorites);
-  useEffect (() => {
-    dispatch(fetchOfferAction(String(params?.id)));
-    dispatch(fetchFavoriteAction(''));
-    dispatch(fetchOfferNearAction(String(params?.id)));
-  }, [dispatch, params]);
   const activeCity = useAppSelector((state) => state.DATA.city);
   const OffersNear = useAppSelector((state) => state.DATA.offersNear);
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
   const hasError = useAppSelector(((state) => state.DATA.hasError));
-  const user = useAppSelector((state) => state.USER.User);
+  const user = useAppSelector((state) => state.USER.user);
   const isOfferLoading = useAppSelector((state) => state.DATA.isOfferLoading);
   const navigate = useNavigate();
+  useEffect (() => {
+    dispatch(fetchOfferAction(String(params?.id)));
+    dispatch(fetchOfferNearAction(String(params?.id)));
+    if (authorizationStatus === AuthorizationStatus.Auth){
+      dispatch(fetchFavoriteAction(''));
+    }
+  }, [dispatch, params, authorizationStatus]);
   if (hasError) {
     return (
       <NotFoundScreen />
@@ -42,7 +45,7 @@ function Offer(): JSX.Element {
       navigate(AppRoute.Login);
       return;
     }
-    dispatch(AddFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
+    dispatch(addFavoriteAction({status: Number(!offer?.isFavorite),offerId: offer?.id }));
   };
   if (isOfferLoading) {
     return <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}> <MoonLoader /></div>;
@@ -84,11 +87,11 @@ function Offer(): JSX.Element {
                   </Link>
                 </li>
                 <li className="header__nav-item">
-                  <Link className="header__nav-link" to={''} >
-                    <span className="header__signout" onClick={() => {
-                      dispatch(logoutAction());
-                    }}
-                    >
+                  <Link className="header__nav-link" to={location} onClick={() => {
+                    dispatch(logoutAction());
+                  }}
+                  >
+                    <span className="header__signout">
                           Sign out
                     </span>
                   </Link>
@@ -153,7 +156,7 @@ function Offer(): JSX.Element {
               </div>
               <ul className='offer__features'>
                 <li className='offer__feature offer__feature--entire'>
-                  {offer?.type}
+                  {offer?.type[0].toUpperCase() + String(offer?.type.slice(1))}
                 </li>
                 <li className='offer__feature offer__feature--bedrooms'>
                   {offer?.bedrooms}{offer?.bedrooms === 1 ? ' Bedroom' : ' Bedrooms'}
@@ -177,7 +180,7 @@ function Offer(): JSX.Element {
               <div className='offer__host'>
                 <h2 className='offer__host-title'>Meet the host</h2>
                 <div className='offer__host-user user'>
-                  <div className='offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper'>
+                  <div className={`offer__avatar-wrapper  user__avatar-wrapper ${offer?.host.isPro ? 'offer__avatar-wrapper--pro' : ''}`}>
                     <img
                       className='offer__avatar user__avatar'
                       src= {offer?.host?.avatarUrl}
@@ -186,6 +189,7 @@ function Offer(): JSX.Element {
                       alt='Host avatar'
                     />
                   </div>
+                  <span className="offer__user-status">{offer?.host.isPro ? 'Pro' : ''}</span>
                   <span className='offer__user-name'>{offer?.host?.name}</span>
                 </div>
                 <div className='offer__description'>

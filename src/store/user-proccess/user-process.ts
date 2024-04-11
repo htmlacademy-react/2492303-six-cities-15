@@ -5,7 +5,7 @@ import { UserData } from '../../types/user-data';
 
 export type InitialState = {
   authorizationStatus: AuthorizationStatus;
-  User? : UserData;
+  user? : UserData;
 }
 
 const initialState: InitialState = {
@@ -20,7 +20,7 @@ export const userProcess = createSlice({
     builder
       .addCase(loginAction.fulfilled, (state, action) => {
         state.authorizationStatus = AuthorizationStatus.Auth;
-        state.User = action.payload;
+        state.user = action.payload;
       })
       .addCase(loginAction.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
@@ -30,10 +30,13 @@ export const userProcess = createSlice({
       })
       .addCase(checkAuthAction.fulfilled, (state, action) => {
         state.authorizationStatus = AuthorizationStatus.Auth;
-        state.User = action.payload;
+        state.user = action.payload;
       })
       .addCase(checkAuthAction.rejected, (state) => {
         state.authorizationStatus = AuthorizationStatus.NoAuth;
+      })
+      .addCase(checkAuthAction.pending, (state) => {
+        state.authorizationStatus = AuthorizationStatus.Unknown;
       });
   }
 });

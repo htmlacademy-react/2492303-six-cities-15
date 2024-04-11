@@ -1,19 +1,19 @@
-import { ChangeEvent, FC, Fragment, useState } from 'react';
+import { ChangeEvent, FC, Fragment, useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { AddCommentAction } from '../../store/api-actions';
 import { FormEvent } from 'react';
-import { getDataLoadingStatus } from '../../store/offer-process/selectors';
+import { getAddCommentStatus } from '../../store/offer-process/selectors';
+import { addCommentAction } from '../../store/api-actions';
 
-export type TFormReviewrops = {
+export type TFormReviewProps = {
   offerId?: string;
 }
 
-export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
+export const FormReview: FC<TFormReviewProps> = ({offerId}) => {
   const [formData, setFormData] = useState({
     rating: -1,
     comment: ''
   });
-  const loadingStatus = useAppSelector(getDataLoadingStatus);
+  const addCommentStatus = useAppSelector(getAddCommentStatus);
   const dispatch = useAppDispatch();
   const handleFieldChange = (event:ChangeEvent<HTMLInputElement>) => {
     const {value} = event.target;
@@ -28,15 +28,18 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (formData) {
-      dispatch(AddCommentAction({
+      dispatch(addCommentAction({
         comment: formData.comment,
         rating: Number(formData.rating),
         offerId: offerId
       }));
-      setFormData({rating:-1, comment:''});
     }
   };
-
+  useEffect(() => {
+    if (addCommentStatus === 'fulfilled'){
+      setFormData({rating:-1, comment:''});
+    }
+  }, [addCommentStatus]);
   const raitings = [
     { value: 5, label: 'perfect'},
     { value: 4, label: 'good'},
@@ -53,7 +56,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         {raitings.map(({ value, label }) => (
           <Fragment key = {value}>
             <input className="form__rating-input visually-hidden" name="rating" id={`${value}-stars`} type="radio"
-              onChange={handleFieldChange} value={value} checked={formData.rating === value}
+              onChange={handleFieldChange} value={value} checked={formData.rating === value} disabled={addCommentStatus === 'pending'}
             />
             <label className="reviews__rating-label form__rating-label" htmlFor={`${value}-stars`} title={label}>
               <svg className ="form__star-image" width="37" height="33">
@@ -70,7 +73,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         placeholder='Tell how was your stay, what you like and what can be improved'
         onChange={handleCommentChange}
         value={formData.comment}
-        disabled={loadingStatus}
+        disabled={addCommentStatus === 'pending'}
       />
       <div className='reviews__button-wrapper'>
         <p className='reviews__help'>
@@ -82,7 +85,7 @@ export const FormReview: FC<TFormReviewrops> = ({offerId}) => {
         <button
           className='reviews__submit form__submit button'
           type='submit'
-          disabled={formData.rating < 1 || formData.comment.length < 50 || formData.comment.length > 300 }
+          disabled={formData.rating < 1 || formData.comment.length < 50 || formData.comment.length > 300 || addCommentStatus === 'pending'}
         >
           Submit
         </button>

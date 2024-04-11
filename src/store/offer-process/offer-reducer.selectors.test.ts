@@ -12,7 +12,8 @@ describe('Offers selectors', () => {
       isOffersLoading: false,
       isOfferLoading: false,
       hasError: false,
-      favorites: []
+      favorites: [],
+      isFavoritesLoading: false
     }
   };
 

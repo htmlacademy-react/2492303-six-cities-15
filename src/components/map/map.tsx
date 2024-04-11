@@ -4,7 +4,7 @@ import {Icon, Marker, layerGroup} from 'leaflet';
 import {TCity, Points, Point} from '../../const';
 import {URL_MARKER_DEFAULT, URL_MARKER_CURRENT} from '../../const';
 import 'leaflet/dist/leaflet.css';
-import useMap from '../hooks/useMap';
+import useMap from '../hooks/use-map';
 
 type MapProps = {
   activeCity: TCity;
@@ -14,14 +14,14 @@ type MapProps = {
 
 const defaultCustomIcon = new Icon({
   iconUrl: URL_MARKER_DEFAULT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconSize: [28, 40],
+  iconAnchor: [14, 40]
 });
 
 const currentCustomIcon = new Icon({
   iconUrl: URL_MARKER_CURRENT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40]
+  iconSize: [28, 40],
+  iconAnchor: [14, 40]
 });
 
 function Map(props: MapProps): JSX.Element {

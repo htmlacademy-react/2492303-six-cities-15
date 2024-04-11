@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { AppRoute, AuthorizationStatus, TOffer } from '../../const';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { AddFavoriteAction } from '../../store/api-actions';
+import { addFavoriteAction } from '../../store/api-actions';
 import { useNavigate } from 'react-router-dom';
 
 export type TOfferCardPageProps = {
@@ -18,7 +18,7 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
       navigate(AppRoute.Login);
     }
     event.stopPropagation();
-    dispatch(AddFavoriteAction({status: Number(!favoritesData.isFavorite),offerId: favoritesData.id }));
+    dispatch(addFavoriteAction({status: Number(!favoritesData.isFavorite),offerId: favoritesData.id }));
   };
 
   return (
@@ -63,14 +63,14 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
         </div>
         <div className='place-card__rating rating'>
           <div className='place-card__stars rating__stars'>
-            <span style={{ width: '80%' }} />
+            <span style={{ width: `${Math.round(favoritesData?.rating) * 20 }%`}} />
             <span className='visually-hidden'>Rating</span>
           </div>
         </div>
         <h2 className='place-card__name'>
           {favoritesData?.title}
         </h2>
-        <p className='place-card__type'>{favoritesData?.type}</p>
+        <p className='place-card__type'>{favoritesData?.type[0].toUpperCase() + favoritesData?.type.slice(1)}</p>
       </div>
     </article>
   );
