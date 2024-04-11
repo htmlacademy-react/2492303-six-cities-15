@@ -133,7 +133,6 @@ export const addFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
     const {data} = await api.post<TOfferFull>(`${APIRoute.Favorites + offerId }/${status}`);
     if (offerId){
       dispatch(fetchFavoriteAction(offerId));
-      //dispatch(fetchOffersAction());
     }
 
     return data;
