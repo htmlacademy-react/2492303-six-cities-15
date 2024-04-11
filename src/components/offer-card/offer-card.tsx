@@ -1,7 +1,7 @@
 import { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus, TOffer } from '../../const';
-import { AddFavoriteAction } from '../../store/api-actions';
+import { addFavoriteAction } from '../../store/api-actions';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { memo } from 'react';
 
@@ -31,7 +31,7 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
       navigate(AppRoute.Login);
     }
     event.stopPropagation();
-    dispatch(AddFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
+    dispatch(addFavoriteAction({status: Number(!offer.isFavorite),offerId: offer.id }));
   };
 
   return(
@@ -60,7 +60,7 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
           <div className="place-card__price">
             <b className="place-card__price-value">€{offer?.price}</b>
             <span className="place-card__price-text">
-              /&nbsp;{offer?.type}
+              /&nbsp;night
             </span>
           </div>
           <button
@@ -88,7 +88,7 @@ const OfferCard: FC<TOfferCardPageProps> = ({offer, handlerHover, typeCard}) => 
           {offer?.title}
           {offer?.isFavorite}
         </h2>
-        <p className="place-card__type">{offer?.type}</p>
+        <p className="place-card__type">{offer?.type[0].toUpperCase() + offer?.type.slice(1)}</p>
       </div>
     </article>
   );

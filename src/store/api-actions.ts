@@ -5,7 +5,7 @@ import {APIRoute, AppRoute, TAddComment, TAddFavorite, TComments, TOffer, TOffer
 import { AuthData } from '../types/auth-data.js';
 import { UserData } from '../types/user-data.js';
 import { dropToken, saveToken } from '../services/token.js';
-import { redirectToRoute } from './action.js';
+import { clearFavorites, redirectToRoute } from './action.js';
 
 export const fetchOffersAction = createAsyncThunk<TOffer[], undefined, {
   dispatch: AppDispatch;
@@ -92,8 +92,7 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {dispatch, extra: api}) => {
     await api.delete(APIRoute.Logout);
     dropToken();
-    dispatch(fetchFavoriteAction(''));
-    dispatch(fetchOffersAction());
+    dispatch(clearFavorites);
   },
 );
 
@@ -110,7 +109,7 @@ export const checkAuthAction = createAsyncThunk<UserData, undefined, {
   },
 );
 
-export const AddCommentAction = createAsyncThunk<void, TAddComment, {
+export const addCommentAction = createAsyncThunk<void, TAddComment, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -124,7 +123,7 @@ export const AddCommentAction = createAsyncThunk<void, TAddComment, {
   },
 );
 
-export const AddFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
+export const addFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
@@ -134,7 +133,7 @@ export const AddFavoriteAction = createAsyncThunk<TOfferFull, TAddFavorite, {
     const {data} = await api.post<TOfferFull>(`${APIRoute.Favorites + offerId }/${status}`);
     if (offerId){
       dispatch(fetchFavoriteAction(offerId));
-      dispatch(fetchOffersAction());
+      //dispatch(fetchOffersAction());
     }
 
     return data;

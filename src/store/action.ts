@@ -6,3 +6,5 @@ export const updateCity = createAction<TCity>('city/updateCity');
 export const insertOffer = createAction<TOffer>('offer/insertOffer');
 
 export const redirectToRoute = createAction<AppRoute>('/six-cities/offers');
+
+export const clearFavorites = createAction('/six-cities/clearFavorites');

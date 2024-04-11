@@ -1,8 +1,8 @@
 import { TOffer, TOfferFull, TCity, TComments, NameSpace } from '../../const';
 import { cities } from '../../mocks/city';
-import { insertOffer, updateCity } from '../action';
+import { clearFavorites, insertOffer, updateCity } from '../action';
 import { createSlice} from '@reduxjs/toolkit';
-import { fetchOffersAction, fetchOfferAction, fetchOfferNearAction, fetchOfferCommentsAction, AddCommentAction, fetchFavoriteAction, AddFavoriteAction } from '../api-actions';
+import { fetchOffersAction, fetchOfferAction, fetchOfferNearAction, fetchOfferCommentsAction, addCommentAction, fetchFavoriteAction, addFavoriteAction } from '../api-actions';
 
 export type InitialState = {
   offers: TOffer[];
@@ -14,7 +14,8 @@ export type InitialState = {
   hasError: boolean;
   comments?: TComments[];
   favorites: TOffer[];
-  loadingStatus?: 'rejected'|'fulfilled'|'pending';
+  isFavoritesLoading: boolean;
+  addCommentStatus?: 'rejected'|'fulfilled'|'pending';
 }
 
 const initialState: InitialState = {
@@ -24,8 +25,9 @@ const initialState: InitialState = {
   isOffersLoading: false,
   isOfferLoading: false,
   hasError: false,
-  loadingStatus:'fulfilled',
-  favorites:[]
+  favorites:[],
+  isFavoritesLoading:false,
+  addCommentStatus:'fulfilled'
 };
 
 export const OfferData = createSlice({
@@ -42,6 +44,9 @@ export const OfferData = createSlice({
       })
       .addCase(fetchOffersAction.pending, (state) => {
         state.isOffersLoading = true;
+      })
+      .addCase(fetchOffersAction.rejected, (state) => {
+        state.isOffersLoading = false;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
         state.offers = action.payload;
@@ -62,34 +67,54 @@ export const OfferData = createSlice({
       .addCase(fetchOfferNearAction.fulfilled, (state, action) => {
         state.offersNear = action.payload;
       })
-      .addCase(fetchOfferCommentsAction.rejected, (state) => {
-        state.loadingStatus = 'rejected';
-      })
-      .addCase(fetchOfferCommentsAction.pending, (state, action) => {
-        state.loadingStatus = 'pending';
-        state.comments = action.payload;
-      })
       .addCase(fetchOfferCommentsAction.fulfilled, (state, action) => {
-        state.loadingStatus = 'fulfilled';
         state.comments = action.payload;
       })
-      .addCase(AddCommentAction.fulfilled, (state) => {
-        state.hasError = false;
+      .addCase(addCommentAction.fulfilled, (state) => {
+        state.addCommentStatus = 'fulfilled';
+      })
+      .addCase(addCommentAction.rejected, (state) => {
+        state.addCommentStatus = 'rejected';
+      })
+      .addCase(addCommentAction.pending, (state) => {
+        state.addCommentStatus = 'pending';
       })
       .addCase(fetchFavoriteAction.fulfilled, (state, action) => {
         state.favorites = action.payload;
+        state.isFavoritesLoading = false;
       })
-      .addCase(AddFavoriteAction.fulfilled, (state, action) => {
+      .addCase(fetchFavoriteAction.pending, (state) => {
+        state.isFavoritesLoading = true;
+      })
+      .addCase(fetchFavoriteAction.rejected, (state) => {
+        state.isFavoritesLoading = false;
+      })
+      .addCase(addFavoriteAction.fulfilled, (state, action) => {
         state.hasError = false;
         const index = state.offersNear?.findIndex((item) => item.id === action.payload.id);
         if (index > -1) {
           state.offersNear[index].isFavorite = action.payload.isFavorite;
         }
 
+        const indexOffer = state.offers.findIndex((item) => item.id === action.payload.id);
+        if (indexOffer > -1) {
+          state.offers[indexOffer].isFavorite = action.payload.isFavorite;
+        }
+
         if (state.offer && state.offer.id === action.payload.id){
           state.offer.isFavorite = action.payload.isFavorite;
         }
 
+      })
+      .addCase(clearFavorites, (state) => {
+        state.offers.map((item) => {
+          item.isFavorite = false;
+        });
+        state.offersNear.map((item) => {
+          item.isFavorite = false;
+        });
+
+        state.favorites = [];
       });
   }
 });

@@ -1,17 +1,17 @@
 import { TOffer } from '../../const';
 
-function SortOffer(offersData: TOffer[], typeS: string): TOffer[] {
-  if (typeS === 'low'){
+function sortOffer(offersData: TOffer[], typeSort: string): TOffer[] {
+  if (typeSort === 'low'){
     return offersData.slice().sort((a, b) => a.price - b.price);
   }
-  if (typeS === 'height'){
+  if (typeSort === 'height'){
     return offersData.slice().sort((a, b) => b.price - a.price);
   }
-  if (typeS === 'rated'){
+  if (typeSort === 'rated'){
     return offersData.slice().sort((a, b) => b.rating - a.rating);
   } else {
     return offersData;
   }
 }
 
-export default SortOffer;
+export default sortOffer;
