@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../hooks';
 import { FormEvent } from 'react';
 import { getAddCommentStatus } from '../../store/offer-process/selectors';
 import { addCommentAction } from '../../store/api-actions';
+import { toast } from 'react-toastify';
 
 export type TFormReviewProps = {
   offerId?: string;
@@ -38,6 +39,8 @@ export const FormReview: FC<TFormReviewProps> = ({offerId}) => {
   useEffect(() => {
     if (addCommentStatus === 'fulfilled'){
       setFormData({rating:-1, comment:''});
+    } else if (addCommentStatus === 'rejected'){
+      toast.warn('Ошибка отправки отзыва.');
     }
   }, [addCommentStatus]);
   const raitings = [

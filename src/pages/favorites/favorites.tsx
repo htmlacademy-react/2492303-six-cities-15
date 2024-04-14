@@ -25,6 +25,10 @@ export const Favorites: FC = () => {
   const handleClick = (nameCity: string) => {
     dispatch(updateCity(cities.find((item) => (item.name === nameCity)) || cities[0]));
   };
+  const handleSignOut = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
+    dispatch(logoutAction());
+  };
   return (
     <div className={`page ${!favorites || favorites?.length === 0 ? 'page--favorites-empty' : ''} `}>
       <header className='header'>
@@ -60,10 +64,7 @@ export const Favorites: FC = () => {
                   </Link>
                 </li>
                 <li className='header__nav-item'>
-                  <Link to = {AppRoute.Login} className='header__nav-link' onClick={() => {
-                    dispatch(logoutAction());
-                  }}
-                  >
+                  <Link to = {AppRoute.Login} className='header__nav-link' onClick={handleSignOut}>
                     <span className='header__signout'>
                       Sign out
                     </span>
@@ -74,7 +75,7 @@ export const Favorites: FC = () => {
           </div>
         </div>
       </header>
-      <main className='page__main page__main--favorites'>
+      <main className= {`page__main page__main--favorites ${favorites?.length === 0 ? 'page__main--favorites-empty' : ''}`}>
         <div className='page__favorites-container container'>
           {
             (!favorites || favorites?.length === 0) &&

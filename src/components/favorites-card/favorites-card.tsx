@@ -13,10 +13,12 @@ export const FavoritesCard: FC<TOfferCardPageProps> = ({favoritesData}) => {
   const navigate = useNavigate();
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
 
-  const handleClick = (event: { stopPropagation: () => void}) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.preventDefault();
     if (authorizationStatus === AuthorizationStatus.NoAuth){
       navigate(AppRoute.Login);
     }
+
     event.stopPropagation();
     dispatch(addFavoriteAction({status: Number(!favoritesData.isFavorite),offerId: favoritesData.id }));
   };
