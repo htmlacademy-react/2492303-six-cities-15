@@ -19,7 +19,7 @@ export const ReviewsInfo: FC<TReviewsInfoProps> = (props) => {
         {props.reviewData.comment}
       </p>
       <time className='reviews__time' dateTime={String(props.reviewData.date)} data-testid="review-time">
-        {dateCreate};
+        {dateCreate}
       </time>
     </div>
   );

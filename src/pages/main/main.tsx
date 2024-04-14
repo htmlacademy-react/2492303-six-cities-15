@@ -32,6 +32,11 @@ export const MainPage: FC = () => {
   const handleClick = (city: TCity) => {
     dispatch(updateCity(city));
   };
+  const handleSignOut = (event: React.MouseEvent<HTMLElement>) => {
+
+    event.preventDefault();
+    dispatch(logoutAction());
+  };
   const authorizationStatus = useAppSelector((state) => state.USER.authorizationStatus);
   const favorite = useAppSelector((state) => state.DATA.favorites);
   return (
@@ -70,10 +75,7 @@ export const MainPage: FC = () => {
                     </Link>
                   </li>
                   <li className="header__nav-item">
-                    <Link to={AppRoute.Main} className="header__nav-link" onClick={() => {
-                      dispatch(logoutAction());
-                    }}
-                    >
+                    <Link to={AppRoute.Main} className="header__nav-link" onClick={handleSignOut}>
                       <span className="header__signout">
                           Sign out
                       </span>
@@ -94,7 +96,7 @@ export const MainPage: FC = () => {
           </div>
         </div>
       </header>
-      <main className= {`${offers.length > 0 ? 'page__main page__main--index' : 'page__main page__main--index page__main--index-empty'}`}>
+      <main className= {`${offersFilter.length > 0 ? 'page__main page__main--index' : 'page__main page__main--index page__main--index-empty'}`}>
         <h1 className="visually-hidden">Cities</h1>
         <div className="tabs">
           <section className="locations container">
@@ -108,7 +110,7 @@ export const MainPage: FC = () => {
           </section>
         </div>
         {isOffersLoading && <div style={{display:'flex', justifyContent:'center', alignItems: 'center'}}><MoonLoader /></div>}
-        {offers.length > 0 &&
+        {offersFilter.length > 0 &&
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
@@ -126,7 +128,7 @@ export const MainPage: FC = () => {
             </div>
           </div>
         </div>}
-        {!isOffersLoading && offers.length === 0 &&
+        {!isOffersLoading && offersFilter.length === 0 &&
         <div className="cities">
           <div className='cities__places-container cities__places-container--empty container'>
             <section className='cities__no-places'>
