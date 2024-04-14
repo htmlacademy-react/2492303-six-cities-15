@@ -12,6 +12,8 @@ const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.BAD_REQUEST]: true,
   [StatusCodes.UNAUTHORIZED]: true,
   [StatusCodes.NOT_FOUND]: true,
+  [StatusCodes.CONFLICT]: true,
+  [StatusCodes.INTERNAL_SERVER_ERROR]: true
 };
 
 const BACKEND_URL = 'https://15.design.htmlacademy.pro/six-cities/';
